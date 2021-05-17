@@ -3,7 +3,6 @@ from discord.ext import commands
 import os
 import asyncio
 import random
-from keep_alive import keep_alive
 
 intents = discord.Intents.all()
 
@@ -62,5 +61,4 @@ async def help(ctx):
 
 
 client.loop.create_task(change_stat())
-keep_alive()
 client.run(os.getenv("TOKEN"))
