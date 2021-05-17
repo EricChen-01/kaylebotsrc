@@ -16,7 +16,7 @@ class CrossServerCommunication(commands.Cog):
 
   #commands
   @commands.command()
-  async def talk(self, ctx, message):
+  async def talk(self, ctx, *, message):
     await ctx.send(message)
   
   
