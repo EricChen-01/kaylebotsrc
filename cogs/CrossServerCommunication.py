@@ -24,7 +24,8 @@ class CrossServerCommunication(commands.Cog):
   @commands.command()
   async def receive(self, ctx):
     results =   collection.aggregate([{ "$sample": { "size": 1 } }])
-    await ctx.send(results[0]["message"])
+    for result in results:
+      await ctx.send(result["message"])
   
     
 def setup(client):
