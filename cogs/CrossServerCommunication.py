@@ -23,7 +23,7 @@ class CrossServerCommunication(commands.Cog):
 
   @commands.command()
   async def receive(self, ctx):
-    results = collection.aggregate([{'$sample:{size:1}'}]).pretty()
+    results = collection.aggregate([{'$sample':{'size':1}}]).pretty()
     await ctx.send(results["message"])
   
     
