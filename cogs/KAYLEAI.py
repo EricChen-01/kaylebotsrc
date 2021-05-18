@@ -20,7 +20,7 @@ class KAYLEAI(commands.Cog):
     if(message.content.startswith('kayle ') ):
         sendString = message.content[6:]
         encoded = urllib.parse.quote(sendString)
-        params = {'language':'en', 'type' : 'stable', 'message':encoded, 'dev_name' :'Yatami', 'bot_name' : 'KAYLE', 'unique_id':message.author.id}  
+        params = {'language':'en', 'type' : 'unstable', 'message':encoded, 'dev_name' :'Yatami', 'bot_name' : 'KAYLE', 'unique_id':message.author.id}  
 
         async with aiohttp.ClientSession(headers=header) as session:
           async with session.get(url='https://api.pgamerx.com/v3/ai/response', params=params) as resp:
