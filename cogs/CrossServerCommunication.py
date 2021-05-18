@@ -17,13 +17,15 @@ class CrossServerCommunication(commands.Cog):
   #commands
   @commands.command()
   async def talk(self, ctx, *, message):
-    await ctx.send(message)
-  
-  
+    authorID = message.author.id
+    newMessage = {"_id":authorID, "name": ctx.message.author.display_name, "message": message}
+    collection.insert_one(newMessage)
 
+  @commands.command()
+  async def receive(self, ctx):
+    results = collection.aggregate([{'$sample:{size:1}'}]).pretty()
+    await ctx.send(results["message"])
   
-
- 
-  
+    
 def setup(client):
   client.add_cog(CrossServerCommunication(client))
