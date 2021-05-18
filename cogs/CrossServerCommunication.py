@@ -17,7 +17,7 @@ class CrossServerCommunication(commands.Cog):
   #commands
   @commands.command()
   async def talk(self, ctx, *, message):
-    authorID = message.author.id
+    authorID = ctx.message.author.id
     newMessage = {"_id":authorID, "name": ctx.message.author.display_name, "message": message}
     collection.insert_one(newMessage)
 
