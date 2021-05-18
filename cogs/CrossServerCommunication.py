@@ -25,6 +25,7 @@ class CrossServerCommunication(commands.Cog):
     results =   collection.aggregate([{ "$sample": { "size": 1 } }])
     for result in results:
       await ctx.send(f'{result["name"]} said "{result["message"]}".')
+      collection.delete_one({"_id":result["_id"]})
   
     
 def setup(client):
