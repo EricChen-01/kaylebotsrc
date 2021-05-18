@@ -17,14 +17,14 @@ class CrossServerCommunication(commands.Cog):
   #commands
   @commands.command()
   async def talk(self, ctx, *, message):
-    newMessage = {"name": ctx.message.author.display_name, "message": message}
+    newMessage = {"name": ctx.message.author.display_name, "message": message, "guild": ctx.message.author.guild.name}
     collection.insert_one(newMessage)
 
   @commands.command()
   async def receive(self, ctx):
     results =   collection.aggregate([{ "$sample": { "size": 1 } }])
     for result in results:
-      await ctx.send(f'{result["name"]} said "{result["message"]}".')
+      await ctx.send(f'{result["name"]} from {result["guild"]} said "{result["message"]}".')
       collection.delete_one({"_id":result["_id"]})
   
     
