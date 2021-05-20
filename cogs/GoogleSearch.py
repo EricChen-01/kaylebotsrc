@@ -3,7 +3,6 @@ from discord.ext import commands
 import os
 from google_images_download import google_images_download 
 
-response = google_images_downlaod.google_images_downlaod()
 
 class GoogleSearch(commands.Cog):
   def __init__(self, client):
@@ -17,6 +16,7 @@ def setup(client):
   client.add_cog(GoogleSearch(client))
 
 def downloadimages(query):
+    response = google_images_download.googleimagesdownload()
     arguments = {"keywords": query,
                  "format": "jpg",
                  "limit":1,
