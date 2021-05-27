@@ -20,10 +20,10 @@ class KAYLEAI(commands.Cog):
     if(message.content.startswith('kayle ') ):
         sendString = message.content[6:]
         encoded = urllib.parse.quote(sendString)
-        params = {'language':'en', 'type' : 'unstable', 'message':encoded, 'dev_name' :'Yatami', 'bot_name' : 'KAYLE', 'unique_id':message.author.id}  
+        params = {'language':'en', 'message':encoded, 'master' :'Yatami', 'bot' : 'KAYLE', 'unique_id':message.author.id, 'server':'primary'}  
 
         async with aiohttp.ClientSession(headers=header) as session:
-          async with session.get(url='https://api.pgamerx.com/v3/ai/response', params=params) as resp:
+          async with session.get(url='https://api.pgamerx.com/beta/ai', params=params) as resp:
               text = await resp.json()
               async with message.channel.typing():
                 await asyncio.sleep(1)
