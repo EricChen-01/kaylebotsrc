@@ -12,6 +12,9 @@ class ModerationPlus(commands.Cog):
   def __init__(self, client):
         self.client = client
   #commands
+
+
+  #database
   @commands.command()
   async def register(self, ctx):
     authorID = ctx.message.author.id
@@ -39,6 +42,7 @@ class ModerationPlus(commands.Cog):
       await ctx.send('Reseting the database.')
       collection.delete_many({})
 
+  #reports/details
   @commands.command()
   async def report(self,ctx, user: discord.Member=None, field="-i"):
     if user == None:
@@ -77,6 +81,8 @@ class ModerationPlus(commands.Cog):
         userDetails.set_image(url= user.avatar_url)
         await ctx.send(embed=userDetails)
 
+
+  #chat moderation
   @commands.command()
   @commands.has_permissions(manage_messages=True)
   async def clear(self, ctx, amount=None, notif="-ns"):
@@ -95,16 +101,27 @@ class ModerationPlus(commands.Cog):
       if( not(notif == "-s") ):
         await ctx.send(f'Cleared {amount} messages')
 
-  @clear.error
-  async def clear_error(self, ctx, error):
-    if isinstance(error, commands.MissingRequiredArgument):
-        await ctx.send('Please specifiy an amount of messages to delete.')
-
   @commands.command(pass_context=True)
   @commands.has_permissions(manage_messages=True)
-  async def cnick(self,ctx, member: discord.Member, *,nick):
+  async def nick(self,ctx, member: discord.Member, *,nick):
     await member.edit(nick=nick)
     await ctx.send(f'Nickname was changed for {member.mention} ')
+
+  @commands.command()
+  @commands.has_permissions(administrator=True)
+  async def ban(self, ctx, user: discord.Member, reason='no reason'):
+    userID = user.id
+    await ctx.guild.ban(user)
+    await self.client.send_message(user, reason)
+    await ctx.send(f'{user.display_name} has been banned for the reason: {reason}')
+
+  @commands.command()
+  @commands.has_permissions(administrator=True)
+  async def unban(self, ctx, user: discord.Member, reason='no reason'):
+    await ctx.guild.unban(user)
+    await ctx.send(f'{user.display_name} has been unbanned for the reason: {reason}')
+
+  
   
 def setup(client):
   client.add_cog(ModerationPlus(client))
