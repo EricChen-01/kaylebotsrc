@@ -3,14 +3,59 @@ from discord.ext import commands
 import pymongo
 from pymongo import MongoClient
 import os
+import datetime
 #run python -m pip install pymongo[srv] if error
 cluster = MongoClient(f'mongodb+srv://Kayle:{os.getenv("mongoDBPassword")}@discordkayledb.ddcpx.mongodb.net/KayleBotDataBase?retryWrites=true&w=majority')
 db = cluster["KayleBotDataBase"]
 collection = db["Users"]
 
+serverCluster = MongoClient(f'mongodb+srv://Kayle:{os.getenv("mongoDBPassword")}@discordkayledb.ddcpx.mongodb.net/server?retryWrites=true&w=majority')
+serverdb = serverCluster["server"]
+svrCollection = serverdb["server"]
+
+
+
 class ModerationPlus(commands.Cog):
   def __init__(self, client):
         self.client = client
+
+  #events
+  #join/leave messages
+  @commands.Cog.listener()
+  async def on_member_join(self, member):
+    guildID = member.guild.id
+    result = svrCollection.find_one({"_id":guildID})
+
+    if result == None:
+      return
+    elif result["channel"] == None or result["join"] == None or result["leave"] == None:
+      return
+    else:
+      embed = discord.Embed(title="***Person Joined***",color=0x14749F, description=f'{result["join"]}')
+      embed.set_thumbnail(url=f'{member.avatar_url}')
+      embed.set_author(name=f'{member.name}', icon_url=f'{member.avatar_url}')
+      embed.set_footer(text=f"{member.guild}", icon_url=f"{member.guild.icon_url}")
+      embed.timestamp = datetime.datetime.utcnow()
+      channel =  self.client.get_channel(id=result["channel"])
+      await channel.send(embed=embed)
+
+
+  @commands.Cog.listener()
+  async def on_member_remove(self, member):
+    guildID = member.guild.id
+    result = svrCollection.find_one({"_id":guildID})
+    if result == None:
+      return
+    elif result["channel"] == None or result["join"] == None or result["leave"] == None:
+      return
+    else:
+      embed = discord.Embed(title="***Person Left :(***",color=0x14749F, description=f'{result["leave"]}')
+      embed.set_thumbnail(url=f'{member.avatar_url}')
+      embed.set_author(name=f'{member.name}', icon_url=f'{member.avatar_url}')
+      embed.set_footer(text=f"{member.guild}", icon_url=f"{member.guild.icon_url}")
+      embed.timestamp = datetime.datetime.utcnow()
+      channel =  self.client.get_channel(id=result["channel"])
+      await channel.send(embed=embed)
 
   #commands
   #database
@@ -25,6 +70,60 @@ class ModerationPlus(commands.Cog):
     else:
       await ctx.send(f'User: {ctx.message.author.display_name} is alredy in the database.')
   
+  @commands.group(invoke_without_command=True)
+  async def setup(self,ctx):
+    await ctx.send('Setup commands: \nsetup server \nsetup channel [#channel] \nsetup join [message] \n setup leave [message]')
+
+  @setup.command()
+  @commands.has_permissions(administrator=True)
+  async def server(self,ctx):
+    guildID = ctx.guild.id
+    result = svrCollection.find_one({"_id":guildID})
+    if result == None:
+      newServer = {"_id":guildID, "channel": None, "join": None, "leave": None}
+      svrCollection.insert_one(newServer)
+      await ctx.send('Server successfully registered.')
+    else:
+      await ctx.send('This server is already registered.')
+
+  @setup.command()
+  @commands.has_permissions(administrator=True)
+  async def channel(self,ctx, channel: discord.TextChannel):
+    guildID = ctx.message.author.guild.id
+    result = svrCollection.find_one({"_id":guildID})
+
+    if result == None:
+      await ctx.send('This server is not registered.')
+    else:
+      svrCollection.update_one({"_id":ctx.guild.id}, {"$set":{"channel": channel.id}})
+      await ctx.send(f'Channel has been updted to {channel.mention}')
+
+  @setup.command()
+  @commands.has_permissions(administrator=True)
+  async def join(self,ctx, *,msg):
+    guildID = ctx.guild.id
+    result = svrCollection.find_one({"_id":guildID})
+
+    if result == None:
+      await ctx.send('This server is not registered.')
+    else:
+      svrCollection.update_one({"_id":ctx.guild.id}, {"$set":{"join": msg}})
+      await ctx.send(f'Welcome message has been set to "{msg}".')
+
+
+  @setup.command()
+  @commands.has_permissions(administrator=True)
+  async def leave(self,ctx, *,msg):
+    guildID = ctx.guild.id
+    result = svrCollection.find_one({"_id":guildID})
+
+    if result == None:
+      await ctx.send('This server is not registered.')
+    else:
+      svrCollection.update_one({"_id":ctx.guild.id}, {"$set":{"leave": msg}})
+      await ctx.send(f'Leave message has been set to "{msg}".')
+
+
   @commands.command()
   async def unregister(self, ctx):
     authorID = ctx.message.author.id
@@ -109,17 +208,8 @@ class ModerationPlus(commands.Cog):
   @commands.command()
   @commands.has_permissions(administrator=True)
   async def ban(self, ctx, user: discord.Member, reason='no reason'):
-    userID = user.id
     await ctx.guild.ban(user)
-    await self.client.send_message(user, reason)
     await ctx.send(f'{user.display_name} has been banned for the reason: {reason}')
-
-  @commands.command()
-  @commands.has_permissions(administrator=True)
-  async def unban(self, ctx, user: discord.Member, reason='no reason'):
-    await ctx.guild.unban(user)
-    await ctx.send(f'{user.display_name} has been unbanned for the reason: {reason}')
-  
   
   
 def setup(client):

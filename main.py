@@ -14,23 +14,6 @@ client.remove_command("help")
 async def on_ready():
     await client.change_presence(status=discord.Status.idle)
 
-#join/leave messages
-@client.event
-async def on_member_join(member):
-  guildName = member.guild.name
-  channel = discord.utils.get(member.guild.text_channels, name="welcome")
-  join = [f'Make room! {member} is here!', f'Welcome to {guildName}', f'Behold our new member, {member}', f'Dangggg, {member} looking bussin bussin sheeeshh']
-
-  await channel.send(random.choice(join))
-
-@client.event
-async def on_member_leave(member):
-  guildName = member.guild.name
-  channel = discord.utils.get(member.guild.text_channels, name="welcome")
-  leave = [f'{member} left :( what a loser', f'{guildName} left. Bruh', f'Lol {member} left this server', f'{member} not looking bussin bussin sheeeshh >:(']
-
-  await channel.send(random.choice(leave))
-
 
 #changing bot status
 async def change_stat():
