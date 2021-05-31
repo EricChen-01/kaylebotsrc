@@ -11,9 +11,8 @@ collection = db["Users"]
 class ModerationPlus(commands.Cog):
   def __init__(self, client):
         self.client = client
+
   #commands
-
-
   #database
   @commands.command()
   async def register(self, ctx):
@@ -120,7 +119,7 @@ class ModerationPlus(commands.Cog):
   async def unban(self, ctx, user: discord.Member, reason='no reason'):
     await ctx.guild.unban(user)
     await ctx.send(f'{user.display_name} has been unbanned for the reason: {reason}')
-
+  
   
   
 def setup(client):
