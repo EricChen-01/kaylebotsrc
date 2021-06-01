@@ -60,7 +60,7 @@ class ModerationPlus(commands.Cog):
   #on_raw_message_delete
   @commands.Cog.listener()
   async def on_raw_message_delete(self,payload):
-    msg = await self.client.get_channel(payload.channel_id).fetch_message(payload.message_id)
+    msg = self.client.get_channel(id=payload.channel_id).fetch_message(payload.message_id)
     author = msg.author
 
     guildID = payload.guild_id
