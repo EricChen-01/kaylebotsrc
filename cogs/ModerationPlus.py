@@ -276,7 +276,7 @@ class ModerationPlus(commands.Cog):
   async def leave(self, ctx):
     await ctx.send('KAYLE has left the server.')
     guildID_to_leave = self.client.get_guild(ctx.message.guild.id)
-    guildID_to_leave.leave()
+    await guildID_to_leave.leave()
 
   
 
