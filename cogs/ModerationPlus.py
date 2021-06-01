@@ -57,6 +57,29 @@ class ModerationPlus(commands.Cog):
       channel =  self.client.get_channel(id=result["channel"])
       await channel.send(embed=embed)
 
+  #on_raw_message_delete
+  @commands.Cog.listender()
+  async def on_raw_message_delete(self,payload):
+    msg = await self.client.get_channel(payload.channel_id).fetch_message(payload.message_id)
+    author = msg.author
+
+    guildID = payload.guild_id
+    result = svrCollection.find_one({"_id":guildID})
+
+    if result == None:
+      return
+    elif result['audit_log'] == None:
+      return
+    else:
+      embed = discord.Embed(title="***Message Deleted***",color=0x14749F)
+      embed.set_thumbnail(url=f'{author.avatar_url}')
+      embed.set_author(name=f'{author.name}', icon_url=f'{author.avatar_url}')
+      embed.set_footer(text=f"{author.guild}", icon_url=f"{author.guild.icon_url}")
+      embed.timestamp = datetime.datetime.utcnow()
+      channel =  self.client.get_channel(id=result["audit_log"])
+      await channel.send(embed=embed)
+    
+
   #commands
   #database
   @commands.command()
@@ -80,7 +103,7 @@ class ModerationPlus(commands.Cog):
     guildID = ctx.guild.id
     result = svrCollection.find_one({"_id":guildID})
     if result == None:
-      newServer = {"_id":guildID, "channel": None, "join": None, "leave": None}
+      newServer = {"_id":guildID, "channel": None, "join": None, "leave": None, "audit_log": None}
       svrCollection.insert_one(newServer)
       await ctx.send('Server successfully registered.')
     else:
@@ -208,12 +231,14 @@ class ModerationPlus(commands.Cog):
   @commands.command()
   @commands.has_permissions(ban_members = True)
   async def ban(self, ctx, user: discord.Member, reason='no reason'):
+    user.send(f'You have been banned from {user.guild.name} for the reason: {reason}.')
     await  user.ban(reason=reason)
-    await ctx.send(f'{user.display_name} has been banned for the reason: {reason}')
+    await ctx.send(f'{user.display_name} has been banned for the reason: {reason}.')
 
   @commands.command()
   @commands.has_permissions(ban_members = True)
   async def unban(self, ctx, *, member):
+
     banned_users = await ctx.guild.bans()
     member_name, member_disc = member.split('#')
 
@@ -222,9 +247,18 @@ class ModerationPlus(commands.Cog):
 
       if (user.name,user.discriminator) == (member_name,member_disc):
         await ctx.guild.unban(user)
-        await ctx.send(f'{member_name}has been unbanned.')
+        await ctx.send(f'{member_name} has been unbanned.')
         return
     ctx.send(f'{member}was not found.')
+
+  @commands.command()
+  @commands.has_permissions(kick_members = True)
+  async def kick(self, ctx, user:discord.Member, *,reason='no reason'):
+    user.send(f'You have been kicked from {user.guild.name} for the reason: {reason}.')
+    user.kick(reason=reason)
+    await ctx.send(f'{user.display_name} has been kicked for: "{reason}"')
+
+
 
   
 
