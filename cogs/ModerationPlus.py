@@ -1,5 +1,6 @@
 import discord
 from discord.ext import commands
+from discord.ext.commands.core import is_owner
 import pymongo
 from pymongo import MongoClient
 import os
@@ -270,6 +271,14 @@ class ModerationPlus(commands.Cog):
     user.kick(reason=reason)
     await ctx.send(f'{user.display_name} has been kicked for: "{reason}"')
 
+  @commands.command()
+  @commands.has_permissions(is_owner = True)
+  async def leave(self, ctx):
+    await ctx.send('KAYLE has left the server.')
+    guildID_to_leave = self.client.get_guild(ctx.message.guild.id)
+    guildID_to_leave.leave()
+
+  
 
 
   
