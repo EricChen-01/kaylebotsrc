@@ -78,7 +78,7 @@ class ModerationPlus(commands.Cog):
       embed.timestamp = datetime.datetime.utcnow()
       channel =  self.client.get_channel(id=result["audit_log"])
       await channel.send(embed=embed)
-    
+  
 
   #commands
   #database
@@ -95,7 +95,19 @@ class ModerationPlus(commands.Cog):
   
   @commands.group(invoke_without_command=True)
   async def setup(self,ctx):
-    await ctx.send('Setup commands: \nsetup server \nsetup channel [#channel] \nsetup join [message] \n setup leave [message]')
+    await ctx.send('Setup commands: \nsetup server \nsetup channel [#channel] \nsetup join [message] \nsetup leave [message] \nsetup log')
+
+  @setup.command()
+  @commands.has_permissions(administrator=True)
+  async def log(self,ctx, channel: discord.TextChannel):
+    guildID = ctx.message.author.guild.id
+    result = svrCollection.find_one({"_id":guildID})
+
+    if result == None:
+      await ctx.send('This server is not registered.')
+    else:
+      svrCollection.update_one({"_id":ctx.guild.id}, {"$set":{"audit_log": channel.id}})
+      await ctx.send(f'Audit log channel has been updted to {channel.mention}')
 
   @setup.command()
   @commands.has_permissions(administrator=True)
