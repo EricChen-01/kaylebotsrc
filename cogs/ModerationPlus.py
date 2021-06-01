@@ -59,11 +59,11 @@ class ModerationPlus(commands.Cog):
 
   #on_raw_message_delete
   @commands.Cog.listener()
-  async def on_raw_message_delete(self,payload):
-    msg = self.client.get_channel(id=payload.channel_id).fetch_message(payload.message_id)
-    author = msg.author
+  async def on_message_delete(self,message):
+    msg = message.content
+    author = message.author
 
-    guildID = payload.guild_id
+    guildID = message.guild.id
     result = svrCollection.find_one({"_id":guildID})
 
     if result == None:
@@ -71,7 +71,7 @@ class ModerationPlus(commands.Cog):
     elif result['audit_log'] == None:
       return
     else:
-      embed = discord.Embed(title="***Message Deleted***",color=0x14749F)
+      embed = discord.Embed(title="***Message Deleted***",color=0x14749F, description=f'{msg}')
       embed.set_thumbnail(url=f'{author.avatar_url}')
       embed.set_author(name=f'{author.name}', icon_url=f'{author.avatar_url}')
       embed.set_footer(text=f"{author.guild}", icon_url=f"{author.guild.icon_url}")
