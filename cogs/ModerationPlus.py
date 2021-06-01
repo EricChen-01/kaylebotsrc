@@ -272,7 +272,7 @@ class ModerationPlus(commands.Cog):
     await ctx.send(f'{user.display_name} has been kicked for: "{reason}"')
 
   @commands.command()
-  @commands.has_permissions(is_owner = True)
+  @commands.has_permissions(administrator = True)
   async def leave(self, ctx):
     await ctx.send('KAYLE has left the server.')
     guildID_to_leave = self.client.get_guild(ctx.message.guild.id)
