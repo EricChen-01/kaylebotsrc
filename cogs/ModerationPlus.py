@@ -278,7 +278,9 @@ class ModerationPlus(commands.Cog):
     guildID_to_leave = self.client.get_guild(ctx.message.guild.id)
     await guildID_to_leave.leave()
 
-  
+  @commands.command()
+  async def hi(self,ctx):
+    await ctx.send('This is sent with tts', tts=True)
 
 
   
