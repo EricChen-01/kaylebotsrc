@@ -71,7 +71,7 @@ class ModerationPlus(commands.Cog):
     elif result['audit_log'] == None:
       return
     else:
-      embed = discord.Embed(title=f"***Message Deleted in {message.channel.mention}***",color=0x14749F, description=f'{msg}')
+      embed = discord.Embed(title=f"***Message Deleted in #{message.channel.name}***",color=0x14749F, description=f'{msg}')
       embed.set_thumbnail(url=f'{author.avatar_url}')
       embed.set_author(name=f'{author.name}', icon_url=f'{author.avatar_url}')
       embed.set_footer(text=f"{author.guild}", icon_url=f"{author.guild.icon_url}")
