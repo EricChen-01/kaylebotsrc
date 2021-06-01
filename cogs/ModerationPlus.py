@@ -210,10 +210,6 @@ class ModerationPlus(commands.Cog):
   async def ban(self, ctx, user: discord.Member, reason='no reason'):
     await ctx.guild.ban(user)
     await ctx.send(f'{user.display_name} has been banned for the reason: {reason}')
-
-  @commands.command()
-  async def herro(self,ctx):
-    await ctx.send('hi')
   
   
 def setup(client):
