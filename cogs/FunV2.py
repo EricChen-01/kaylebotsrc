@@ -223,7 +223,12 @@ class FunV2(commands.Cog):
         await ctx.send(f'**{ctx.message.author.name}** said')
       else:  
         await ctx.send(f'**{ctx.message.author.nick}** said ')
-      await ctx.send('https://cdn.discordapp.com/attachments/775898898559533068/834623699079659550/unknown.png')  
+      await ctx.send('https://cdn.discordapp.com/attachments/775898898559533068/834623699079659550/unknown.png')
+    
+    @commands.command()
+    async def roast(self, ctx, user:discord.Member):
+      response = requests.get("https://evilinsult.com/generate_insult.php?lang=en&type=json")
+      await ctx.send(f'{user.display_name}, {response.json()["insult"]}')
  
 def setup(client):
     client.add_cog(FunV2(client))

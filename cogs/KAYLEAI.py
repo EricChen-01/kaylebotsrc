@@ -16,7 +16,6 @@ class KAYLEAI(commands.Cog):
   async def on_message(self, message):
     if self.client.user == message.author:
       return
-    # and ( ('kayle-chat' or 'off-topic') in message.channel.name) 
     if(message.content.startswith('kayle ') ):
         sendString = message.content[6:]
         encoded = urllib.parse.quote(sendString)

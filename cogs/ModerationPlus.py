@@ -206,10 +206,29 @@ class ModerationPlus(commands.Cog):
     await ctx.send(f'Nickname was changed for {member.mention} ')
 
   @commands.command()
-  @commands.has_permissions(administrator=True)
+  @commands.has_permissions(ban_members = True)
   async def ban(self, ctx, user: discord.Member, reason='no reason'):
-    await ctx.guild.ban(user)
+    await  user.ban(reason=reason)
     await ctx.send(f'{user.display_name} has been banned for the reason: {reason}')
+
+  @commands.command()
+  @commands.has_permissions(ban_members = True)
+  async def unban(self, ctx, *, member):
+    banned_users = await ctx.guild.bans()
+    member_name, member_disc = member.split('#')
+
+    for banned_entry in banned_users:
+      user = banned_entry.user
+
+      if (user.name,user.discriminator) == (member_name,member_disc):
+        await ctx.guild.unban(user)
+        await ctx.send(f'{member_name}has been unbanned.')
+        return
+    ctx.send(f'{member}was not found.')
+
+  
+
+  
   
   
 def setup(client):

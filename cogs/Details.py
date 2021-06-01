@@ -10,17 +10,21 @@ class Details(commands.Cog):
   async def version(self,ctx):
     servers = self.client.guilds
     versionEmbed = discord.Embed(title="KAYLE's Version: THE FUN UPDATE",
-                                 description="""```css\nVersion 1.4```""",
+                                 description="""```css\nVersion 2.0```""",
                                  color=0x14749F)
     versionEmbed.add_field(name="Version Code:", value="""```css\nv1.4.1```""", inline=False)
-    versionEmbed.add_field(name="1.4.1 Patch Notes:",
+    versionEmbed.add_field(name="2.0.0 Patch Notes:",
     value="""```
-Version 1.4.1:
-+ Kayle now supports jokes! Ask her for a joke!           
+Version 2.0.0:
++ Revamped Fun,KAYLEAI, Moderation.    
++ New Moderation commands
+- Cross Server Communication
+- .k meme [subreddit]
+- old fun commands 
     ```""",
                            inline=False)
     versionEmbed.add_field(name="Version Date Released:",
-                           value="April 13, 2021",
+                           value="June, 2021",
                            inline=False)
     versionEmbed.add_field(name="BOT BIRTHDATE:",
                            value="March 13, 2021",
