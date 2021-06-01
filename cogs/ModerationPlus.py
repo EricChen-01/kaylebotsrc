@@ -58,7 +58,7 @@ class ModerationPlus(commands.Cog):
       await channel.send(embed=embed)
 
   #on_raw_message_delete
-  @commands.Cog.listender()
+  @commands.Cog.listener()
   async def on_raw_message_delete(self,payload):
     msg = await self.client.get_channel(payload.channel_id).fetch_message(payload.message_id)
     author = msg.author
