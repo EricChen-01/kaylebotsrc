@@ -21,6 +21,8 @@ Version 2.0.0:
 - Cross Server Communication
 - .k meme [subreddit]
 - old fun commands 
++ ALL MEMBERS will now be registered apon joining servers.
+
     ```""",
                            inline=False)
     versionEmbed.add_field(name="Version Date Released:",

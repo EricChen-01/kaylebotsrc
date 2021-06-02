@@ -11,7 +11,7 @@ class FunV2(commands.Cog):
         self.client = client
     
     #commands
-    @commands.command(brief='<@someone> <reason>')
+    @commands.command()
     async def slap(self,ctx,  user:discord.Member, *,reason="no reason"):
         await ctx.send(f'**{user.display_name}** just got slapped for **{reason}**')
         await ctx.send('https://tenor.com/view/penguins-penguin-siblings-gif-7249411')
@@ -229,6 +229,6 @@ class FunV2(commands.Cog):
     async def roast(self, ctx, user:discord.Member):
       response = requests.get("https://evilinsult.com/generate_insult.php?lang=en&type=json")
       await ctx.send(f'{user.display_name}, {response.json()["insult"]}')
- 
+    
 def setup(client):
     client.add_cog(FunV2(client))

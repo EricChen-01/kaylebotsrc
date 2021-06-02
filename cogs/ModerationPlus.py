@@ -24,6 +24,7 @@ class ModerationPlus(commands.Cog):
   #join/leave messages
   @commands.Cog.listener()
   async def on_member_join(self, member):
+    #welcome message if server is registered and all required fields are active.
     guildID = member.guild.id
     result = svrCollection.find_one({"_id":guildID})
 
@@ -39,6 +40,13 @@ class ModerationPlus(commands.Cog):
       embed.timestamp = datetime.datetime.utcnow()
       channel =  self.client.get_channel(id=result["channel"])
       await channel.send(embed=embed)
+
+    #checks if user is registered and registers then if not
+    authorID = member.author.id
+    result = collection.find_one({"_id":authorID})
+    if result == None:
+      newUser = {"_id":authorID, "name": ctx.message.author.display_name, "reports": 0, "balance": 0}
+      collection.insert_one(newUser)
 
 
   @commands.Cog.listener()
@@ -81,22 +89,11 @@ class ModerationPlus(commands.Cog):
       await channel.send(embed=embed)
   
 
-  #commands
-  #database
-  @commands.command()
-  async def register(self, ctx):
-    authorID = ctx.message.author.id
-    result = collection.find_one({"_id":authorID})
-    if result == None:
-      await ctx.send(f'Registered {ctx.message.author.display_name} into the database.')
-      newUser = {"_id":authorID, "name": ctx.message.author.display_name, "reports": 0, "balance": 0}
-      collection.insert_one(newUser)
-    else:
-      await ctx.send(f'User: {ctx.message.author.display_name} is alredy in the database.')
-  
+  #commands  
+  #server registration
   @commands.group(invoke_without_command=True)
   async def setup(self,ctx):
-    await ctx.send('Setup commands: \nsetup server \nsetup channel [#channel] \nsetup join [message] \nsetup leave [message] \nsetup log')
+    await ctx.send('Setup commands: \nsetup server \nsetup channel [#channel] \nsetup join [message] \nsetup leave [message] \nsetup log \nsetup modmail [channelID] \nsetup addMod [memberID]')
 
   @setup.command()
   @commands.has_permissions(administrator=True)
@@ -146,7 +143,6 @@ class ModerationPlus(commands.Cog):
       svrCollection.update_one({"_id":ctx.guild.id}, {"$set":{"join": msg}})
       await ctx.send(f'Welcome message has been set to "{msg}".')
 
-
   @setup.command()
   @commands.has_permissions(administrator=True)
   async def leave(self,ctx, *,msg):
@@ -158,23 +154,6 @@ class ModerationPlus(commands.Cog):
     else:
       svrCollection.update_one({"_id":ctx.guild.id}, {"$set":{"leave": msg}})
       await ctx.send(f'Leave message has been set to "{msg}".')
-
-
-  @commands.command()
-  async def unregister(self, ctx):
-    authorID = ctx.message.author.id
-    result = collection.find_one({"_id":authorID})
-    if result == None:
-      await ctx.send(f'{ctx.message.author.display_name} is not in the database.')
-    else:
-      await ctx.send(f'Deleting: {ctx.message.author.display_name} from the database.')
-      collection.delete_one({"_id":authorID})
-
-  @commands.command()
-  async def resetDataBase(self,ctx):
-    if ctx.author.id == 235103490869821440:
-      await ctx.send('Reseting the database.')
-      collection.delete_many({})
 
   #reports/details
   @commands.command()
@@ -215,7 +194,18 @@ class ModerationPlus(commands.Cog):
         userDetails.set_image(url= user.avatar_url)
         await ctx.send(embed=userDetails)
 
-
+  #unregistering user
+  @commands.command()
+  @commands.has_permissions(administrator = True)
+  async def unregister(self, ctx):
+    authorID = ctx.message.author.id
+    result = collection.find_one({"_id":authorID})
+    if result == None:
+      await ctx.send(f'{ctx.message.author.display_name} is not in the database.')
+    else:
+      await ctx.send(f'Deleting: {ctx.message.author.display_name} from the database.')
+      collection.delete_one({"_id":authorID})
+  
   #chat moderation
   @commands.command()
   @commands.has_permissions(manage_messages=True)
@@ -270,19 +260,6 @@ class ModerationPlus(commands.Cog):
     user.send(f'You have been kicked from {user.guild.name} for the reason: {reason}.')
     user.kick(reason=reason)
     await ctx.send(f'{user.display_name} has been kicked for: "{reason}"')
-
-  @commands.command()
-  @commands.has_permissions(administrator = True)
-  async def leave(self, ctx):
-    await ctx.send('KAYLE has left the server.')
-    guildID_to_leave = self.client.get_guild(ctx.message.guild.id)
-    await guildID_to_leave.leave()
-
-
-  
-
-  
-  
   
 def setup(client):
   client.add_cog(ModerationPlus(client))
