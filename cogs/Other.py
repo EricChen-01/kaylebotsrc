@@ -18,7 +18,7 @@ class Other(commands.Cog):
         currently = response.json()["weather"][0]["main"]
         description = response.json()["weather"][0]["description"]
         temperature = response.json()["main"]["temp"]
-        fahrenheit = ((temperature - 273.15) * 9) / 5
+        fahrenheit = (((temperature - 273.15) * 9) / 5) + 32
         celsius = (fahrenheit - 32) * (5/9)
         await ctx.send(f'{city}: currently:{currently}\ndescription:{description}\nTemperature:{round(fahrenheit,2)}°F    {round(celsius,2)}°C    {round(temperature,2)}°K')
         
