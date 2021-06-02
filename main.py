@@ -38,7 +38,7 @@ async def on_command_error(ctx, error):
   elif isinstance(error, commands.MissingRequiredArgument):
     await ctx.send(f"Sorry {displayName}! Missing required arguments!")
   elif isinstance(error, commands.CommandOnCooldown):
-    await ctx.send(f"Sorry {displayName}! This command is on cooldown. Please try again in {error.retry_after} seconds")
+    await ctx.send(f"Sorry {displayName}! This command is on cooldown. Please try again in {round(error.retry_after, 2)} seconds")
   else:
     await ctx.send(f"Sory {displayName}! I don't know this command!")
   pass
