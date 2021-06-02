@@ -14,7 +14,7 @@ class Other(commands.Cog):
     @commands.command()
     @commands.cooldown(1,3600, commands.BucketType.default)
     async def weather(self,ctx, *,city="New York City"):
-        response = requests.get(f"api.openweathermap.org/data/2.5/weather?q={city}&appid={ os.getenv("WeatherAPI") }")
+        response = requests.get(f"api.openweathermap.org/data/2.5/weather?q={city}&appid={os.getenv('TOKEN')}")
         currently = response.json()["weather"]["main"]
         description = response.json()["weather"]["description"]
         temperature = response.json()["weather"]["temp"]
