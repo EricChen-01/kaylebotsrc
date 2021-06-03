@@ -187,9 +187,12 @@ class ModerationPlus(commands.Cog):
     if result == None:
       await ctx.send('There are no settings for this server. Please register server using ".k setup server" and customize accordingly.')
       return
-
+    
+    settings = ""
     for field in result:
-      await ctx.send(f'{field}')
+      settings = settings + f'{field} = {result[field]}\n'
+    
+    await ctx.send(settings)
 
 
 
