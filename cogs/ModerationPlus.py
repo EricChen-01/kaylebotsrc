@@ -42,7 +42,7 @@ class ModerationPlus(commands.Cog):
       await channel.send(embed=embed)
 
     #checks if user is registered and registers then if not
-    authorID = member.author.id
+    authorID = member.id
     result = collection.find_one({"_id":authorID})
     if result == None:
       newUser = {"_id":authorID, "name": ctx.message.author.display_name, "reports": 0, "balance": 0}
