@@ -167,7 +167,7 @@ class ModerationPlus(commands.Cog):
     listOfResets = resets.split(',')
     for element in listOfResets:
       if element == "all":
-        svrCollection.update_one({"_id":ctx.guild.id}, {"$set":{"channel": None, "join":None}, "leave":None, "audit_log": None})
+        svrCollection.update_one({"_id":ctx.guild.id}, {"$set":{"channel": None, "join":None, "leave":None, "audit_log": None}})
       elif element == "channel":
         svrCollection.update_one({"_id":ctx.guild.id}, {"$set":{"channel": None}})
       elif element == "join":
