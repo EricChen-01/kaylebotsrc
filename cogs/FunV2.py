@@ -158,7 +158,7 @@ class FunV2(commands.Cog):
       await ctx.send(file = discord.File("./images/profile_clam.jpg"))
 
     @commands.command()
-    async def hug(self, ctx, user: discord.Member = None):
+    async def hug(self, ctx, user: discord.Member = None, *,reason="he/she loves this person."):
       if user == None:
         user = ctx.author
       
@@ -184,7 +184,7 @@ class FunV2(commands.Cog):
       hugged.paste(userPfp, (256,23) )
   
       hugged.save("./images/profile_hug.jpeg")
-
+      await ctx.send(f'{ctx.message.author.mention} hugged {user} because {reason}')
       await ctx.send(file = discord.File("./images/profile_hug.jpeg"))
 
     @commands.command()

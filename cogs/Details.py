@@ -26,7 +26,7 @@ Version 2.0.0:
     ```""",
                            inline=False)
     versionEmbed.add_field(name="Version Date Released:",
-                           value="June, 2021",
+                           value="June 2, 2021",
                            inline=False)
     versionEmbed.add_field(name="BOT BIRTHDATE:",
                            value="March 13, 2021",
