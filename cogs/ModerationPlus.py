@@ -168,8 +168,8 @@ class ModerationPlus(commands.Cog):
     await ctx.send(listOfResets)
     for element in listOfResets:
       if element == "all":
-        svrCollection.update_one({"_id":ctx.guild.id}, {"$set":{"channel": None}})
-        svrCollection.update_one({"_id":ctx.guild.id}, {"$set":{"join": None}})
+        svrCollection.update_one({"_id":ctx.guild.id}, {"$set":{"channel": None, "join":None}})
+
         svrCollection.update_one({"_id":ctx.guild.id}, {"$set":{"leave": None}})
         svrCollection.update_one({"_id":ctx.guild.id}, {"$set":{"audit_log": None}})
         await ctx.send('Server settings reset.')
