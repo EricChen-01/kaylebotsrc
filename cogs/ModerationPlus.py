@@ -306,7 +306,7 @@ class ModerationPlus(commands.Cog):
   @commands.command()
   @commands.has_permissions(ban_members = True)
   async def ban(self, ctx, user: discord.Member, reason='no reason'):
-    user.send(f'You have been banned from {user.guild.name} for the reason: {reason}.')
+    await user.send(f'You have been banned from {user.guild.name} for the reason: {reason}.')
     await  user.ban(reason=reason)
     await ctx.send(f'{user.display_name} has been banned for the reason: {reason}.')
 
@@ -329,8 +329,8 @@ class ModerationPlus(commands.Cog):
   @commands.command()
   @commands.has_permissions(kick_members = True)
   async def kick(self, ctx, user:discord.Member, *,reason='no reason'):
-    user.send(f'You have been kicked from {user.guild.name} for the reason: {reason}.')
-    user.kick(reason=reason)
+    await user.send(f'You have been kicked from {user.guild.name} for the reason: {reason}.')
+    await user.kick(reason=reason)
     await ctx.send(f'{user.display_name} has been kicked for: "{reason}"')
 
 
