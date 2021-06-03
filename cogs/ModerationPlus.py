@@ -48,7 +48,6 @@ class ModerationPlus(commands.Cog):
       newUser = {"_id":authorID, "name": ctx.message.author.display_name, "reports": 0, "balance": 0}
       collection.insert_one(newUser)
 
-
   @commands.Cog.listener()
   async def on_member_remove(self, member):
     guildID = member.guild.id
@@ -66,7 +65,7 @@ class ModerationPlus(commands.Cog):
       channel =  self.client.get_channel(id=result["channel"])
       await channel.send(embed=embed)
 
-  #on_raw_message_delete
+  #on message delete
   @commands.Cog.listener()
   async def on_message_delete(self,message):
     msg = message.content
@@ -88,7 +87,38 @@ class ModerationPlus(commands.Cog):
       channel =  self.client.get_channel(id=result["audit_log"])
       await channel.send(embed=embed)
   
-  #
+  #server data removeal apon leave
+  @commands.Cog.listener()
+  async def on_guild_remove(self,guild):
+    guildID = ctx.guild.id
+    result = svrCollection.find_one({"_id":guildID})
+    if result == None:
+      return
+    else:
+      svrCollection.delete_one({"_id":guild.id})
+
+  #on role creation
+  @commands.Cog.listener()
+  async def on_guild_role_create(self,role):
+    role_name = role.name 
+    time_of_creation = role.created_at
+
+    guildID = role.guild.id
+    guild = role.guild
+    result = svrCollection.find_one({"_id":guildID})
+
+    if result == None:
+      return
+    elif result['audit_log'] == None:
+      return
+    else:
+      embed = discord.Embed(title=f"***Role was created: @{role_name}***",color=0x14749F)
+      embed.set_thumbnail(url=f'{guild.avatar_url}')
+      embed.set_footer(text=f"{guild}", icon_url=f"{guild.icon_url}")
+      embed.timestamp = time_of_creation
+      channel =  self.client.get_channel(id=result["audit_log"])
+      await channel.send(embed=embed)
+
   #commands  
   #server registration
   @commands.group(invoke_without_command=True)
@@ -195,8 +225,6 @@ class ModerationPlus(commands.Cog):
       settings = settings + f'{field} = {result[field]}\n'
     
     await ctx.send(settings)
-
-
 
 
   #reports/details
