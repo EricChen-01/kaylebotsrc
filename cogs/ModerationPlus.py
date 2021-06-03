@@ -165,14 +165,33 @@ class ModerationPlus(commands.Cog):
       return
     
     listOfResets = resets.split(',')
-    await ctx.send(listOfResets)
     for element in listOfResets:
       if element == "all":
-        svrCollection.update_one({"_id":ctx.guild.id}, {"$set":{"channel": None, "join":None}})
-
+        svrCollection.update_one({"_id":ctx.guild.id}, {"$set":{"channel": None, "join":None}, "leave":None, "audit_log": None})
+      elif element == "channel":
+        svrCollection.update_one({"_id":ctx.guild.id}, {"$set":{"channel": None}})
+      elif element == "join":
+        svrCollection.update_one({"_id":ctx.guild.id}, {"$set":{"join": None}})
+      elif element == "leave":
         svrCollection.update_one({"_id":ctx.guild.id}, {"$set":{"leave": None}})
+      elif element == "audit_log":
         svrCollection.update_one({"_id":ctx.guild.id}, {"$set":{"audit_log": None}})
-        await ctx.send('Server settings reset.')
+    
+    await ctx.send("Server setting(s) reset.")
+
+  @commands.command()
+  @commands.has_permissions(administrator = True)
+  async def settings(self,ctx):
+    guildID = ctx.guild.id
+    result = svrCollection.find_one({"_id":guildID})
+    if result == None:
+      await ctx.send('There are no settings for this server. Please register server using ".k setup server" and customize accordingly.')
+      return
+
+    for field in result:
+      await ctx.send(f'{field}')
+
+
 
 
   #reports/details
