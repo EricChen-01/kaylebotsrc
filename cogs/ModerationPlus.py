@@ -113,7 +113,7 @@ class ModerationPlus(commands.Cog):
       return
     else:
       embed = discord.Embed(title=f"***Role was created: @{role_name}***",color=0x14749F)
-      embed.set_thumbnail(url=f'{guild.avatar_url}')
+      embed.set_thumbnail(url=f'{guild.icon_url}')
       embed.set_footer(text=f"{guild}", icon_url=f"{guild.icon_url}")
       embed.timestamp = time_of_creation
       channel =  self.client.get_channel(id=result["audit_log"])
@@ -123,7 +123,7 @@ class ModerationPlus(commands.Cog):
   #server registration
   @commands.group(invoke_without_command=True)
   async def setup(self,ctx):
-    await ctx.send('Setup commands: \nsetup server \nsetup channel [#channel] \nsetup join [message] \nsetup leave [message] \nsetup log \nsetup reset')
+    await ctx.send('Setup commands: \nsetup server \nsetup channel [#channel] \nsetup join [message] \nsetup leave [message] \nsetup log [#channel] \nsetup reset')
 
   @setup.command()
   @commands.has_permissions(administrator=True)
