@@ -105,7 +105,7 @@ class ModerationPlus(commands.Cog):
       await ctx.send('This server is not registered.')
     else:
       svrCollection.update_one({"_id":ctx.guild.id}, {"$set":{"audit_log": channel.id}})
-      await ctx.send(f'Audit log channel has been updted to {channel.mention}')
+      await ctx.send(f'Audit log channel has been updated to {channel.mention}')
 
   @setup.command()
   @commands.has_permissions(administrator=True)
@@ -129,7 +129,7 @@ class ModerationPlus(commands.Cog):
       await ctx.send('This server is not registered.')
     else:
       svrCollection.update_one({"_id":ctx.guild.id}, {"$set":{"channel": channel.id}})
-      await ctx.send(f'Channel has been updted to {channel.mention}')
+      await ctx.send(f'Channel has been updated to {channel.mention}')
 
   @setup.command()
   @commands.has_permissions(administrator=True)
@@ -176,6 +176,8 @@ class ModerationPlus(commands.Cog):
         svrCollection.update_one({"_id":ctx.guild.id}, {"$set":{"leave": None}})
       elif element == "audit_log":
         svrCollection.update_one({"_id":ctx.guild.id}, {"$set":{"audit_log": None}})
+      else:
+        ctx.send(f'{element} could not be found.')
     
     await ctx.send("Server setting(s) reset.")
 

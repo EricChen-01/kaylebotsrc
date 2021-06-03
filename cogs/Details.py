@@ -9,10 +9,10 @@ class Details(commands.Cog):
   @commands.command(aliases=['v','-v'])
   async def version(self,ctx):
     servers = self.client.guilds
-    versionEmbed = discord.Embed(title="KAYLE's Version: THE FUN UPDATE",
+    versionEmbed = discord.Embed(title="KAYLE's Version: THE NEW KAYLE UPDATE",
                                  description="""```css\nVersion 2.0```""",
                                  color=0x14749F)
-    versionEmbed.add_field(name="Version Code:", value="""```css\nv1.4.1```""", inline=False)
+    versionEmbed.add_field(name="Version Code:", value="""```css\nv2.0.0```""", inline=False)
     versionEmbed.add_field(name="2.0.0 Patch Notes:",
     value="""```
 Version 2.0.0:
