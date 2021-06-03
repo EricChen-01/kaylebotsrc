@@ -88,6 +88,31 @@ class ModerationPlus(commands.Cog):
       channel =  self.client.get_channel(id=result["audit_log"])
       await channel.send(embed=embed)
   
+  #mute/deafen event
+  @commands.Cog.listener()
+  async def on_voice_state_update(self,member, before, after):
+    guildID = member.guild.id
+    result = svrCollection.find_one({"_id":guildID})
+
+    if result == None:
+      return
+    elif result['audit_log'] == None:
+      return
+    else:
+      embed = discord.Embed(title=f"***Voice Update***",color=0x14749F)
+      embed.add_field(name="Before:",
+                           value=f"Mute: {before.mute}\nDeaf: {before.deaf}",
+                           inline=False)
+      embed.add_field(name="After:",
+                           value=f"Mute: {after.mute}\nDeaf: {after.deaf}",
+                           inline=False)
+      embed.set_thumbnail(url=f'{member.avatar_url}')
+      embed.set_author(name=f'{member.name}', icon_url=f'{member.avatar_url}')
+      embed.set_footer(text=f"{member.guild}", icon_url=f"{member.guild.icon_url}")
+      embed.timestamp = datetime.datetime.utcnow()
+      channel =  self.client.get_channel(id=result["audit_log"])
+      await channel.send(embed=embed)
+
 
   #commands  
   #server registration
