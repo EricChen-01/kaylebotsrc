@@ -45,7 +45,7 @@ class ModerationPlus(commands.Cog):
     authorID = member.id
     result = collection.find_one({"_id":authorID})
     if result == None:
-      newUser = {"_id":authorID, "name": ctx.message.author.display_name, "reports": 0, "balance": 0}
+      newUser = {"_id":authorID, "name": member.display_name, "reports": 0, "balance": 0}
       collection.insert_one(newUser)
 
   @commands.Cog.listener()
