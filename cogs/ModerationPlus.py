@@ -207,7 +207,7 @@ class ModerationPlus(commands.Cog):
       elif element == "audit_log":
         svrCollection.update_one({"_id":ctx.guild.id}, {"$set":{"audit_log": None}})
       else:
-        ctx.send(f'{element} could not be found.')
+        await ctx.send(f'{element} could not be found.')
     
     await ctx.send("Server setting(s) reset.")
 
@@ -225,7 +225,6 @@ class ModerationPlus(commands.Cog):
       settings = settings + f'{field} = {result[field]}\n'
     
     await ctx.send(settings)
-
 
   #reports/details
   @commands.command()
@@ -333,6 +332,9 @@ class ModerationPlus(commands.Cog):
     await user.kick(reason=reason)
     await ctx.send(f'{user.display_name} has been kicked for: "{reason}"')
 
+
+  #reaction roles
+  
 
 def setup(client):
   client.add_cog(ModerationPlus(client))
