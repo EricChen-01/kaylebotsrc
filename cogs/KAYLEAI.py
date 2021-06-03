@@ -22,24 +22,12 @@ class KAYLEAI(commands.Cog):
         params = {'language':'en', 'message':encoded, 'master' :'Yatami', 'bot' : 'KAYLE', 'unique_id':message.author.id, 'server':'primary'}  
 
         async with aiohttp.ClientSession(headers=header) as session:
-          async with session.get(url='https://api.pgamerx.com/beta/ai', params=params) as resp:
+          async with session.get(url='https://api.pgamerx.com/v4/ai', params=params) as resp:
               text = await resp.json()
               async with message.channel.typing():
                 await asyncio.sleep(1)
               await message.reply(text[0]['message'])
               await self.client.process_commands(message)
-    if(message.content.startswith('ttskayle ') ):
-      sendString = message.content[9:]
-      encoded = urllib.parse.quote(sendString)
-      params = {'language':'en', 'message':encoded, 'master' :'Yatami', 'bot' : 'KAYLE', 'unique_id':message.author.id, 'server':'primary'}  
-
-      async with aiohttp.ClientSession(headers=header) as session:
-        async with session.get(url='https://api.pgamerx.com/beta/ai', params=params) as resp:
-            text = await resp.json()
-            async with message.channel.typing():
-              await asyncio.sleep(1)
-            await message.reply(text[0]['message'],tts=True)
-            await self.client.process_commands(message)
 
 
 def setup(client):
