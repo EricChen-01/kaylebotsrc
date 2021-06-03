@@ -165,6 +165,7 @@ class ModerationPlus(commands.Cog):
       return
     
     listOfResets = resets.split(',')
+    await ctx.send(listOfResets)
     for element in listOfResets:
       if element == "all":
         svrCollection.update({"_id":ctx.guild.id}, {
