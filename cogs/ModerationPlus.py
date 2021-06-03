@@ -88,12 +88,12 @@ class ModerationPlus(commands.Cog):
       channel =  self.client.get_channel(id=result["audit_log"])
       await channel.send(embed=embed)
   
-
+  #
   #commands  
   #server registration
   @commands.group(invoke_without_command=True)
   async def setup(self,ctx):
-    await ctx.send('Setup commands: \nsetup server \nsetup channel [#channel] \nsetup join [message] \nsetup leave [message] \nsetup log \nsetup modmail [channelID] \nsetup addMod [memberID]')
+    await ctx.send('Setup commands: \nsetup server \nsetup channel [#channel] \nsetup join [message] \nsetup leave [message] \nsetup log \nsetup reset')
 
   @setup.command()
   @commands.has_permissions(administrator=True)
@@ -154,6 +154,29 @@ class ModerationPlus(commands.Cog):
     else:
       svrCollection.update_one({"_id":ctx.guild.id}, {"$set":{"leave": msg}})
       await ctx.send(f'Leave message has been set to "{msg}".')
+
+  @setup.command()
+  @commands.has_permissions(administrator=True)
+  async def reset(self,ctx, *,resets = "all"):
+    guildID = ctx.guild.id
+    result = svrCollection.find_one({"_id":guildID})
+    if result == None:
+      await ctx.send('This server is not registered.')
+      return
+    
+    listOfResets = resets.split(',')
+    for element in listOfResets:
+      if element == "all":
+        svrCollection.update({"_id":ctx.guild.id}, {
+          "$set":{"channel": None},
+          "$set":{"join": None},
+          "$set":{"leave": None},
+          "$set":{"audit_log": None},
+          }
+          )
+    
+    await ctx.send('Server settings reset.')
+
 
   #reports/details
   @commands.command()
@@ -260,6 +283,7 @@ class ModerationPlus(commands.Cog):
     user.send(f'You have been kicked from {user.guild.name} for the reason: {reason}.')
     user.kick(reason=reason)
     await ctx.send(f'{user.display_name} has been kicked for: "{reason}"')
-  
+
+
 def setup(client):
   client.add_cog(ModerationPlus(client))
