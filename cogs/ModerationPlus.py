@@ -5,6 +5,7 @@ import pymongo
 from pymongo import MongoClient
 import os
 import datetime
+import asyncio
 #run python -m pip install pymongo[srv] if error
 cluster = MongoClient(f'mongodb+srv://Kayle:{os.getenv("mongoDBPassword")}@discordkayledb.ddcpx.mongodb.net/KayleBotDataBase?retryWrites=true&w=majority')
 db = cluster["KayleBotDataBase"]
@@ -306,7 +307,7 @@ class ModerationPlus(commands.Cog):
   @commands.has_permissions(ban_members = True)
   async def ban(self, ctx, user: discord.Member, reason='no reason'):
     await user.send(f'You have been banned from {user.guild.name} for the reason: {reason}.')
-    await  user.ban(reason=reason)
+    await user.ban(reason=reason)
     await ctx.send(f'{user.display_name} has been banned for the reason: {reason}.')
 
   @commands.command()
@@ -328,13 +329,44 @@ class ModerationPlus(commands.Cog):
   @commands.command()
   @commands.has_permissions(kick_members = True)
   async def kick(self, ctx, user:discord.Member, *,reason='no reason'):
-    await user.send(f'You have been kicked from {user.guild.name} for the reason: {reason}.')
     await user.kick(reason=reason)
+    await user.send(f'You have been kicked from {user.guild.name} for the reason: {reason}.')
     await ctx.send(f'{user.display_name} has been kicked for: "{reason}"')
 
+  @commands.command()
+  @commands.has_permission(manage_channels=True)
+  async def lockdown(self, ctx, *,reason='no reason'):
+    await ctx.channel.set_permissions(ctx.guild.default_role, send_message=False)
+    await ctx.send('This channel is now locked.')
 
-  #reaction roles
-  
+  @commands.command()
+  @commands.has_permission(manage_channels=True)
+  async def unlock(self, ctx, *,reason='no reason'):
+    await ctx.channel.set_permissions(ctx.guild.default_role, send_message=True)
+    await ctx.send('This channel has been unlocked.')
+
+
+  @commands.group(invoke_without_command=True)
+  async def experimental(self,ctx):
+    em = discord.Embed(title=f"***Server Setup For {ctx.guild.name}***",color=0x14749F)
+    em.add_field(name='***Join/Leave Channel***', value=f'Please reply with channel id.', inline=True)
+    em.set_footer(text=f"{ctx.author.guild}", icon_url=f"{ctx.author.guild.icon_url}")
+    em.timestamp = datetime.datetime.utcnow()
+    sent = await ctx.send(embed=em)
+
+    try:
+      reply = await self.client.wait_for(
+        "message",
+        timeout=10,
+        check = lambda message: message.author == ctx.author and message.channel == ctx.channel
+      )
+      if reply: 
+        await sent.delete()
+        await reply.delete()
+        await ctx.send(reply.content)
+    except asyncio.TimeoutError:
+      await sent.delete()
+      await ctx.send('Setup timedout.', delete_after=10)
 
 def setup(client):
   client.add_cog(ModerationPlus(client))
