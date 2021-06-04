@@ -367,7 +367,7 @@ class ModerationPlus(commands.Cog):
       if reply: 
         await sent.delete()
         await reply.delete()
-        channel = reply
+        channel = reply.content
 
         setup.clear_fields()
         setup.add_field(name='***Join Message***', value=f'Please reply with a message.', inline=True)
@@ -382,7 +382,7 @@ class ModerationPlus(commands.Cog):
         if reply:
           await sent.delete()
           await reply.delete()
-          join = reply
+          join = reply.content
 
           setup.clear_fields()
           setup.add_field(name='***Leave Message***', value=f'Please reply with a message.', inline=True)
@@ -398,7 +398,7 @@ class ModerationPlus(commands.Cog):
             await sent.delete()
             await reply.delete()
 
-            leave = reply
+            leave = reply.content
 
             await ctx.send(f'{channel}, {join}, {leave}, {auditLog}')
 
