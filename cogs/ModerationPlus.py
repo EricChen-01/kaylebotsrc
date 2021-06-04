@@ -334,13 +334,13 @@ class ModerationPlus(commands.Cog):
     await ctx.send(f'{user.display_name} has been kicked for: "{reason}"')
 
   @commands.command()
-  @commands.has_permission(manage_channels=True)
+  @commands.has_permissions(manage_channels=True)
   async def lockdown(self, ctx, *,reason='no reason'):
     await ctx.channel.set_permissions(ctx.guild.default_role, send_message=False)
     await ctx.send('This channel is now locked.')
 
   @commands.command()
-  @commands.has_permission(manage_channels=True)
+  @commands.has_permissions(manage_channels=True)
   async def unlock(self, ctx, *,reason='no reason'):
     await ctx.channel.set_permissions(ctx.guild.default_role, send_message=True)
     await ctx.send('This channel has been unlocked.')
