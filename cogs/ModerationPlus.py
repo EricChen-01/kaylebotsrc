@@ -358,7 +358,7 @@ class ModerationPlus(commands.Cog):
       reply = await self.client.wait_for(
         "message",
         timeout=10,
-        check = lambda message: message.author == ctx.author and message.channel == ctx.channel
+        check = lambda message: message.author == ctx.author and message.channel == ctx.channel and isinstance(message,discord.TextChannel)
       )
       if reply: 
         await sent.delete()
