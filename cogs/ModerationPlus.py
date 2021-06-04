@@ -354,14 +354,11 @@ class ModerationPlus(commands.Cog):
     em.timestamp = datetime.datetime.utcnow()
     sent = await ctx.send(embed=em)
 
-    def check(channel,user):
-      return user == ctx.author and channel == ctx.channel
-
     try:
-      reply, user = await self.client.wait_for(
+      reply = await self.client.wait_for(
         "message",
         timeout=10,
-        check = check
+        check = lambda message: message.author == ctx.author and message.channel == ctx.channel
       )
       if reply: 
         await sent.delete()
