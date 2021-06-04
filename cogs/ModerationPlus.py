@@ -354,6 +354,10 @@ class ModerationPlus(commands.Cog):
     setup.timestamp = datetime.datetime.utcnow()
     sent = await ctx.send(embed=setup)
 
+    channel = None
+    join = None
+    leave = None
+    auditLog = None
     try:
       reply = await self.client.wait_for(
         "message",
@@ -363,6 +367,7 @@ class ModerationPlus(commands.Cog):
       if reply: 
         await sent.delete()
         await reply.delete()
+        channel = reply
 
         setup.clear_fields()
         setup.add_field(name='***Join Message***', value=f'Please reply with a message.', inline=True)
@@ -377,6 +382,7 @@ class ModerationPlus(commands.Cog):
         if reply:
           await sent.delete()
           await reply.delete()
+          join = reply
 
           setup.clear_fields()
           setup.add_field(name='***Leave Message***', value=f'Please reply with a message.', inline=True)
@@ -392,7 +398,9 @@ class ModerationPlus(commands.Cog):
             await sent.delete()
             await reply.delete()
 
-            await ctx.send("complete")
+            leave = reply
+
+            await ctx.send(f'{channel}, {join}, {leave}, {auditLog}')
 
 
     except asyncio.TimeoutError:
