@@ -345,67 +345,6 @@ class ModerationPlus(commands.Cog):
     await ctx.channel.set_permissions(ctx.guild.default_role, send_messages=True)
     await ctx.send('This channel has been unlocked.')
 
-  #experimental
-  @commands.group(invoke_without_command=True)
-  async def experimental(self,ctx):
-    setup = discord.Embed(title=f"***Server Setup For {ctx.guild.name}***",color=0x14749F)
-    setup.add_field(name='***Join/Leave Channel***', value=f'Please reply with channel id.', inline=True)
-    setup.set_footer(text=f"{ctx.author.guild}", icon_url=f"{ctx.author.guild.icon_url}")
-    setup.timestamp = datetime.datetime.utcnow()
-    sent = await ctx.send(embed=setup)
-
-    channel = None
-    join = None
-    leave = None
-    auditLog = None
-    try:
-      reply = await self.client.wait_for(
-        "message",
-        timeout=10,
-        check = lambda message: message.author == ctx.author and message.channel == ctx.channel
-      )
-      if reply: 
-        await sent.delete()
-        await reply.delete()
-        channel = reply.content
-
-        setup.clear_fields()
-        setup.add_field(name='***Join Message***', value=f'Please reply with a message.', inline=True)
-
-        sent = await ctx.send(embed=setup)
-
-        reply = await self.client.wait_for(
-        "message",
-        timeout=10,
-        check = lambda message: message.author == ctx.author and message.channel == ctx.channel
-        ) 
-        if reply:
-          await sent.delete()
-          await reply.delete()
-          join = reply.content
-
-          setup.clear_fields()
-          setup.add_field(name='***Leave Message***', value=f'Please reply with a message.', inline=True)
-
-          sent = await ctx.send(embed=setup)
-
-          reply = await self.client.wait_for(
-            "message",
-            timeout=10,
-            check = lambda message: message.author == ctx.author and message.channel == ctx.channel
-          ) 
-          if reply:
-            await sent.delete()
-            await reply.delete()
-
-            leave = reply.content
-
-            await ctx.send(f'{channel}, {join}, {leave}, {auditLog}')
-
-
-    except asyncio.TimeoutError:
-      await sent.delete()
-      await ctx.send('Setup timedout.', delete_after=10)
 
 def setup(client):
   client.add_cog(ModerationPlus(client))
