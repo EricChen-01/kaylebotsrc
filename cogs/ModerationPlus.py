@@ -335,17 +335,17 @@ class ModerationPlus(commands.Cog):
 
   @commands.command()
   @commands.has_permissions(manage_channels=True)
-  async def lockdown(self, ctx, *,reason='no reason'):
-    await ctx.channel.set_permissions(ctx.guild.default_role, send_message=False)
+  async def lockdown(self, ctx):
+    await ctx.channel.set_permissions(ctx.guild.default_role, send_messages=False)
     await ctx.send('This channel is now locked.')
 
   @commands.command()
   @commands.has_permissions(manage_channels=True)
-  async def unlock(self, ctx, *,reason='no reason'):
-    await ctx.channel.set_permissions(ctx.guild.default_role, send_message=True)
+  async def unlock(self, ctx):
+    await ctx.channel.set_permissions(ctx.guild.default_role, send_messages=True)
     await ctx.send('This channel has been unlocked.')
 
-
+  #experimental
   @commands.group(invoke_without_command=True)
   async def experimental(self,ctx):
     setup = discord.Embed(title=f"***Server Setup For {ctx.guild.name}***",color=0x14749F)
