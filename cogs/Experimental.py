@@ -14,8 +14,12 @@ class Experimental(commands.Cog):
   #commands
   #experimental
   @commands.command()
-  async def outside(self,ctx):
+  async def server(self,ctx):
     await serverSet(self=self,ctx=ctx)
+
+  @commands.command()
+  async def checker(self,ctx):
+      await isChannel(self,ctx, ctx.message) 
  
 
 def setup(client):
@@ -35,7 +39,6 @@ async def serverSet(self,ctx):
     channelComplete = False
 
     #Channel
-    
     em.add_field(name='***Channel ID: Step 1/4***', value='reply with a channel id. Reply with "NONE" to skip this step. ', inline=True)
     em.add_field(name='***NOTE:***', value ='replying with "NONE" will skips steps 2 and 3.', inline=False)
     sent = await ctx.send(embed=em)
@@ -78,8 +81,6 @@ async def serverSet(self,ctx):
 
     await ctx.send(f"Channel: {channel}\nJoinMessage: {joinMessage}\nleaveMessage: {leaveMessage}\naudit_log: {audit_log}")
 
-
-
 async def respond(self,ctx):
     try:
         msg = await self.client.wait_for("message", check= lambda message: message.author == ctx.author and message.channel == ctx.channel, timeout = 30.0)
@@ -96,5 +97,9 @@ async def respond(self,ctx):
 async def clearEmbed(self,ctx, embed):
     embed.clear_fields()
 
+async def isChannel(self, ctx, message):
+    channelList = message.raw_channel_mentions()
+    for channel in channelList:
+        await ctx.send(f'channelID = {channel}')
 
 
