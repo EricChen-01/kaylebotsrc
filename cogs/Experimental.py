@@ -15,7 +15,7 @@ class Experimental(commands.Cog):
   #experimental
   @commands.command()
   async def outside(self,ctx):
-    await text(ctx.message.content)
+    await text(ctx,ctx.message.content)
 def setup(client):
   client.add_cog(Experimental(client))
 
