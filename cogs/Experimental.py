@@ -44,7 +44,7 @@ async def serverSet(self,ctx):
     await clearEmbed(self, ctx, em)
     if channelComplete:
         em.add_field(name='***Join Message***', value='reply with a join message. Reply with "NONE" to skip this step.', inline=True)
-        sent.edit(embed=em)
+        await sent.edit(embed=em)
         response = await respond(self=self,ctx=ctx)
 
         if response != "NONE":
@@ -57,7 +57,7 @@ async def serverSet(self,ctx):
     await clearEmbed(self,ctx,em)
     if joinComplete:
         em.add_field(name='***Leave Message***', value='reply with a Leave Message. Reply with "NONE" to skip this step.', inline=True)
-        sent.edit(embed=em)
+        await sent.edit(embed=em)
         response = await respond(self=self,ctx=ctx)
 
         if response != "NONE":
@@ -69,7 +69,7 @@ async def serverSet(self,ctx):
     #audit log
     await clearEmbed(self,ctx,em)
     em.add_field(name='***Audit Log***', value='reply with a channel id. Reply with "NONE" to skip this step.', inline=True)
-    sent.edit(embed=em)
+    await sent.edit(embed=em)
     response = await respond(self=self,ctx=ctx)
 
     if response != "NONE":
