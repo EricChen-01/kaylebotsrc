@@ -14,7 +14,7 @@ class Experimental(commands.Cog):
   #experimental
   @commands.command()
   async def outside(self,ctx):
-    await setup(self=self,ctx=ctx)
+    await serverSet(self=self,ctx=ctx)
 def setup(client):
   client.add_cog(Experimental(client))
 
