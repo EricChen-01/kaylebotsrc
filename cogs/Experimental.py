@@ -52,18 +52,11 @@ async def serverSet(self,ctx):
     em.add_field(name='***NOTE:***', value ='replying with "NONE" will skips steps 2 and 3.', inline=False)
     sent = await ctx.send(embed=em)
     await sent.add_reaction("\U0001f60e")
-    while(True):
-        response = await respond(self=self,ctx=ctx)
-        if response != "NONE":
-            isChannel = self.client.get_channel(id=f'{response}')
-            if isChannel != None:
-                channel = response
-                channelComplete = True
-                break
-            else:
-                await ctx.send('Invalid Channel.')
-        else:
-            break
+    response = await respond(self=self,ctx=ctx)
+    if response != "NONE":
+        channel = response
+        channelComplete = True
+            
 
     #join message
     await clearEmbed(self, ctx, em)
