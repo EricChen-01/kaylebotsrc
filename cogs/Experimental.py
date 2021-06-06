@@ -26,8 +26,10 @@ class Experimental(commands.Cog):
     guildID = ctx.guild.id
     result = svrCollection.find_one({"_id":guildID})
     channel =  self.client.get_channel(id=result["channel"])
-    await channel.send('hello')
-
+    if channel != None:
+        await channel.send('hello')
+    else:
+        await ctx.send('Invalid Channel.')
 def setup(client):
   client.add_cog(Experimental(client))
 
