@@ -3,6 +3,7 @@ import asyncio
 import os
 import discord
 from discord.ext import commands
+import datetime
 
 
 header = {"x-api-key": os.getenv("PRSAWAPIKEY")}
@@ -19,64 +20,58 @@ def setup(client):
   client.add_cog(Experimental(client))
 
 async def serverSet(self,ctx):
+    #Embed and variables
+    em = discord.Embed(title ='***Server Setup***',color=0x14749F)
+    em.set_author(name=f'{ctx.author.name}', icon_url=f'{ctx.author.avatar_url}')
+    em.set_footer(text=f"{ctx.author.guild}", icon_url=f"{ctx.author.guild.icon_url}")
+    em.timestamp = datetime.datetime.utcnow()
     channel = None
     joinMessage = None
     leaveMessage = None
     audit_log = None
 
     channelComplete = False
-    joinComplete = False
-    leaveComplete = False
-    auditComplete = False
 
     #Channel
-    em = discord.Embed(title ='***Server Setup***',color=0x14749F)
-    em.add_field(name='***Channel ID***', value='reply with a channel id. Reply with "NONE" to skip this step.', inline=True)
+    em.add_field(name='***Channel ID: Step 1/4***', value='reply with a channel id. Reply with "NONE" to skip this step. ', inline=True)
+    em.add_field(name='NOTE: replying with "NONE" will skips steps 2 and 3.', inline=False)
     sent = await ctx.send(embed=em)
     response = await respond(self=self,ctx=ctx)
-    if response == "NONE":
-        channel = None
-    else:
+    await sent.add_reaction('\U00000031')
+    if response != "NONE":
         channel = response
         channelComplete = True
 
     #join message
     await clearEmbed(self, ctx, em)
+    await sent.add_reaction('\U00000032')
     if channelComplete:
-        em.add_field(name='***Join Message***', value='reply with a join message. Reply with "NONE" to skip this step.', inline=True)
+        em.add_field(name='***Join Message: Step 2/4***', value='reply with a join message. Reply with "NONE" to skip this step.', inline=True)
         await sent.edit(embed=em)
         response = await respond(self=self,ctx=ctx)
-
         if response != "NONE":
             joinMessage = response
-            joinComplete = True
-        else:
-            joinComplete = True
-    
+
     #leave message
     await clearEmbed(self,ctx,em)
-    if joinComplete:
-        em.add_field(name='***Leave Message***', value='reply with a Leave Message. Reply with "NONE" to skip this step.', inline=True)
+    await sent.add_reaction('\U00000033')
+    if channelComplete:
+        em.add_field(name='***Leave Message: Step 3/4***', value='reply with a Leave Message. Reply with "NONE" to skip this step.', inline=True)
         await sent.edit(embed=em)
         response = await respond(self=self,ctx=ctx)
 
         if response != "NONE":
             leaveMessage = response
-            leaveComplete = True
-        else:
-            leaveComplete = True
-    
+
     #audit log
     await clearEmbed(self,ctx,em)
-    em.add_field(name='***Audit Log***', value='reply with a channel id. Reply with "NONE" to skip this step.', inline=True)
+    await sent.add_reaction('\U00000034')
+    em.add_field(name='***Audit Log: Step 4/4***', value='reply with a channel id. Reply with "NONE" to skip this step.', inline=True)
     await sent.edit(embed=em)
     response = await respond(self=self,ctx=ctx)
 
     if response != "NONE":
         audit_log = response
-        auditComplete = True
-    else:
-        auditComplete = True
 
     await ctx.send(f"Channel: {channel}\nJoinMessage: {joinMessage}\nleaveMessage: {leaveMessage}\naudit_log: {audit_log}")
 
