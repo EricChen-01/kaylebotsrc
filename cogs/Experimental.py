@@ -30,7 +30,7 @@ async def serverSet(self,ctx):
     auditComplete = False
 
     #Channel
-    em = discord.Embed(title ='***Server Setup***')
+    em = discord.Embed(title ='***Server Setup***',color=0x14749F)
     em.add_field(name='***Channel ID***', value='reply with a channel id. Reply with "NONE" to skip this step.', inline=True)
     sent = await ctx.send(embed=em)
     response = respond(self=self,ctx=ctx)
