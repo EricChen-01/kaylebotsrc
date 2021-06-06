@@ -15,11 +15,11 @@ class Experimental(commands.Cog):
   #experimental
   @commands.command()
   async def outside(self,ctx):
-    await text(ctx,ctx.message.content)
+      await hi(ctx)
 def setup(client):
   client.add_cog(Experimental(client))
 
+def hi(ctx):
+    ctx.send('hi')
 
 
-def text(ctx,message):
-    ctx.send(message)
