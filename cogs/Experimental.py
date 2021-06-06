@@ -37,7 +37,7 @@ async def serverSet(self,ctx):
     em.add_field(name='***NOTE:***', value ='replying with "NONE" will skips steps 2 and 3.', inline=False)
     sent = await ctx.send(embed=em)
     response = await respond(self=self,ctx=ctx)
-    await sent.add_reaction("\U00000031")
+    await sent.add_reaction('\U00000031')
     if response != "NONE":
         channel = response
         channelComplete = True
@@ -75,7 +75,10 @@ async def serverSet(self,ctx):
 
     await ctx.send(f"Channel: {channel}\nJoinMessage: {joinMessage}\nleaveMessage: {leaveMessage}\naudit_log: {audit_log}")
 
-
+@commands.command()
+async def testt(self,ctx):
+    msg = await ctx.send("hi")
+    await msg.add_reaction('\U00000031')
 
 
 async def respond(self,ctx):
