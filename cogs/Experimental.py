@@ -21,5 +21,5 @@ def setup(client):
 
 
 
-async def text(ctx,message):
-    await ctx.send(message)
+def text(ctx,message):
+    ctx.send(message)
