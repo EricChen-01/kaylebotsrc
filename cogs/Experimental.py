@@ -25,11 +25,12 @@ class Experimental(commands.Cog):
   async def invalid(self,ctx):
     guildID = ctx.guild.id
     result = svrCollection.find_one({"_id":guildID})
-    channel =  self.client.get_channel(id=result["channel"])
+    channel =  self.client.get_channel(id=response)
     if channel != None:
         await channel.send('hello')
     else:
         await ctx.send('Invalid Channel.')
+        
 def setup(client):
   client.add_cog(Experimental(client))
 
@@ -51,10 +52,16 @@ async def serverSet(self,ctx):
     em.add_field(name='***NOTE:***', value ='replying with "NONE" will skips steps 2 and 3.', inline=False)
     sent = await ctx.send(embed=em)
     await sent.add_reaction("\U0001f60e")
-    response = await respond(self=self,ctx=ctx)
-    if response != "NONE":
-        channel = response
-        channelComplete = True
+    while(True):
+        response = await respond(self=self,ctx=ctx)
+        if response != "NONE":
+            isChannel = self.client.get_channel(id=response)
+            if isChannel != None:
+                channel = response
+                channelComplete = True
+                break
+            else:
+                await ctx.send('Invalid Channel.')
 
     #join message
     await clearEmbed(self, ctx, em)
