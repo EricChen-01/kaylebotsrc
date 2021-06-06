@@ -4,6 +4,8 @@ import os
 import discord
 from discord.ext import commands
 import datetime
+import pymongo
+from pymongo import MongoClient
 
 
 serverCluster = MongoClient(f'mongodb+srv://Kayle:{os.getenv("mongoDBPassword")}@discordkayledb.ddcpx.mongodb.net/server?retryWrites=true&w=majority')
