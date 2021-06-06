@@ -16,11 +16,7 @@ class Experimental(commands.Cog):
   @commands.command()
   async def outside(self,ctx):
     await serverSet(self=self,ctx=ctx)
-    
-  @commands.command()
-  async def testt(self,ctx):
-    msg = await ctx.send("hi")
-    await msg.add_reaction('\U0000fe0f')
+ 
 
 def setup(client):
   client.add_cog(Experimental(client))
