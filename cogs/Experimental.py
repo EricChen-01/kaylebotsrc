@@ -39,7 +39,7 @@ async def serverSet(self,ctx):
     em.add_field(name='***NOTE:***', value ='replying with "NONE" will skips steps 2 and 3.', inline=False)
     sent = await ctx.send(embed=em)
     response = await respond(self=self,ctx=ctx)
-    await sent.add_reaction('\U00000031')
+    await sent.add_reaction("💖")
     if response != "NONE":
         channel = response
         channelComplete = True
