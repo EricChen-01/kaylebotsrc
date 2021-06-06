@@ -20,7 +20,7 @@ class Experimental(commands.Cog):
 
   @commands.command()
   async def invalid(self,ctx):
-    response = respond(self,ctx)
+    response = await respond(self,ctx)
     channel =  self.client.get_channel(id=response)
     if channel != None:
         await channel.send(f'Channel exists')
