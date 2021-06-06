@@ -33,7 +33,7 @@ async def serverSet(self,ctx):
     em = discord.Embed(title ='***Server Setup***',color=0x14749F)
     em.add_field(name='***Channel ID***', value='reply with a channel id. Reply with "NONE" to skip this step.', inline=True)
     sent = await ctx.send(embed=em)
-    response = respond(self=self,ctx=ctx)
+    response = await respond(self=self,ctx=ctx)
     if response == "NONE":
         channel = None
     else:
@@ -45,7 +45,7 @@ async def serverSet(self,ctx):
     if channelComplete:
         em.add_field(name='***Join Message***', value='reply with a join message. Reply with "NONE" to skip this step.', inline=True)
         sent.edit(embed=em)
-        response = respond(self=self,ctx=ctx)
+        response = await respond(self=self,ctx=ctx)
 
         if response != "NONE":
             joinMessage = response
@@ -58,7 +58,7 @@ async def serverSet(self,ctx):
     if joinComplete:
         em.add_field(name='***Leave Message***', value='reply with a Leave Message. Reply with "NONE" to skip this step.', inline=True)
         sent.edit(embed=em)
-        response = respond(self=self,ctx=ctx)
+        response = await respond(self=self,ctx=ctx)
 
         if response != "NONE":
             leaveMessage = response
@@ -70,7 +70,7 @@ async def serverSet(self,ctx):
     await clearEmbed(self,ctx,em)
     em.add_field(name='***Audit Log***', value='reply with a channel id. Reply with "NONE" to skip this step.', inline=True)
     sent.edit(embed=em)
-    response = respond(self=self,ctx=ctx)
+    response = await respond(self=self,ctx=ctx)
 
     if response != "NONE":
         audit_log = response
