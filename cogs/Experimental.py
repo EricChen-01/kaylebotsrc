@@ -8,9 +8,6 @@ import pymongo
 from pymongo import MongoClient
 
 
-serverCluster = MongoClient(f'mongodb+srv://Kayle:{os.getenv("mongoDBPassword")}@discordkayledb.ddcpx.mongodb.net/server?retryWrites=true&w=majority')
-serverdb = serverCluster["server"]
-svrCollection = serverdb["server"]
 
 class Experimental(commands.Cog):
   def __init__(self, client):
@@ -23,11 +20,10 @@ class Experimental(commands.Cog):
 
   @commands.command()
   async def invalid(self,ctx):
-    guildID = ctx.guild.id
-    result = svrCollection.find_one({"_id":guildID})
+    response = respond(self,ctx)
     channel =  self.client.get_channel(id=response)
     if channel != None:
-        await channel.send('hello')
+        await channel.send(f'Channel exists')
     else:
         await ctx.send('Invalid Channel.')
         
