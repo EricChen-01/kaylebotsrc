@@ -6,7 +6,9 @@ from discord.ext import commands
 import datetime
 
 
-header = {"x-api-key": os.getenv("PRSAWAPIKEY")}
+serverCluster = MongoClient(f'mongodb+srv://Kayle:{os.getenv("mongoDBPassword")}@discordkayledb.ddcpx.mongodb.net/server?retryWrites=true&w=majority')
+serverdb = serverCluster["server"]
+svrCollection = serverdb["server"]
 
 class Experimental(commands.Cog):
   def __init__(self, client):
@@ -17,10 +19,11 @@ class Experimental(commands.Cog):
   async def server(self,ctx):
     await serverSet(self=self,ctx=ctx)
 
-  @commands.command()
-  async def checker(self,ctx, message):
-      await isChannel(self,ctx, ctx.message) 
- 
+  async def invalid(self,ctx):
+    guildID = ctx.guild.id
+    result = svrCollection.find_one({"_id":guildID})
+    channel =  self.client.get_channel(id=result["channel"])
+    await channel.send('hello')
 
 def setup(client):
   client.add_cog(Experimental(client))
@@ -97,9 +100,5 @@ async def respond(self,ctx):
 async def clearEmbed(self,ctx, embed):
     embed.clear_fields()
 
-async def isChannel(self, ctx, message):
-    channelList = message.raw_channel_mentions()
-    for channel in channelList:
-        await ctx.send(f'channelID = {channel}')
 
 
