@@ -18,7 +18,7 @@ class Experimental(commands.Cog):
 def setup(client):
   client.add_cog(Experimental(client))
 
-async def setup(self,ctx):
+async def serverSet(self,ctx):
     channel = None
     joinMessage = None
     leaveMessage = None
