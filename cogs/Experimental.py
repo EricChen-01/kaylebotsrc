@@ -22,8 +22,8 @@ def setup(client):
 async def serverSet(self,ctx):
     #Embed and variables
     em = discord.Embed(title ='***Server Setup***',color=0x14749F)
-    em.set_author(name=f'{ctx.author.name}', icon_url=f'{ctx.author.avatar_url}')
-    em.set_footer(text=f"{ctx.author.guild}", icon_url=f"{ctx.author.guild.icon_url}")
+   # em.set_author(name=f'{ctx.author.name}', icon_url=f'{ctx.author.avatar_url}')
+   # em.set_footer(text=f"{ctx.author.guild}", icon_url=f"{ctx.author.guild.icon_url}")
     em.timestamp = datetime.datetime.utcnow()
     channel = None
     joinMessage = None
@@ -37,14 +37,14 @@ async def serverSet(self,ctx):
     em.add_field(name='NOTE: replying with "NONE" will skips steps 2 and 3.', inline=False)
     sent = await ctx.send(embed=em)
     response = await respond(self=self,ctx=ctx)
-    #await sent.add_reaction('\U00000031')
+    await sent.add_reaction('\U00000031')
     if response != "NONE":
         channel = response
         channelComplete = True
 
     #join message
     await clearEmbed(self, ctx, em)
-    #await sent.add_reaction('\U00000032')
+    await sent.add_reaction('\U00000032')
     if channelComplete:
         em.add_field(name='***Join Message: Step 2/4***', value='reply with a join message. Reply with "NONE" to skip this step.', inline=True)
         await sent.edit(embed=em)
@@ -54,7 +54,7 @@ async def serverSet(self,ctx):
 
     #leave message
     await clearEmbed(self,ctx,em)
-    #await sent.add_reaction('\U00000033')
+    await sent.add_reaction('\U00000033')
     if channelComplete:
         em.add_field(name='***Leave Message: Step 3/4***', value='reply with a Leave Message. Reply with "NONE" to skip this step.', inline=True)
         await sent.edit(embed=em)
@@ -65,7 +65,7 @@ async def serverSet(self,ctx):
 
     #audit log
     await clearEmbed(self,ctx,em)
-    #await sent.add_reaction('\U00000034')
+    await sent.add_reaction('\U00000034')
     em.add_field(name='***Audit Log: Step 4/4***', value='reply with a channel id. Reply with "NONE" to skip this step.', inline=True)
     await sent.edit(embed=em)
     response = await respond(self=self,ctx=ctx)
