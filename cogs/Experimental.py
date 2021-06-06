@@ -35,18 +35,19 @@ async def serverSet(self,ctx):
     channelComplete = False
 
     #Channel
+    
     em.add_field(name='***Channel ID: Step 1/4***', value='reply with a channel id. Reply with "NONE" to skip this step. ', inline=True)
     em.add_field(name='***NOTE:***', value ='replying with "NONE" will skips steps 2 and 3.', inline=False)
     sent = await ctx.send(embed=em)
+    await sent.add_reaction(":one:")
     response = await respond(self=self,ctx=ctx)
-    await sent.add_reaction("💖")
     if response != "NONE":
         channel = response
         channelComplete = True
 
     #join message
     await clearEmbed(self, ctx, em)
-    #await sent.add_reaction('\U00000032')
+    await sent.add_reaction(":two:")
     if channelComplete:
         em.add_field(name='***Join Message: Step 2/4***', value='reply with a join message. Reply with "NONE" to skip this step.', inline=True)
         await sent.edit(embed=em)
@@ -56,7 +57,7 @@ async def serverSet(self,ctx):
 
     #leave message
     await clearEmbed(self,ctx,em)
-    #await sent.add_reaction('\U00000033')
+    await sent.add_reaction(":three:")
     if channelComplete:
         em.add_field(name='***Leave Message: Step 3/4***', value='reply with a Leave Message. Reply with "NONE" to skip this step.', inline=True)
         await sent.edit(embed=em)
@@ -67,7 +68,7 @@ async def serverSet(self,ctx):
 
     #audit log
     await clearEmbed(self,ctx,em)
-    #await sent.add_reaction('\U00000034')
+    await sent.add_reaction(":four:")
     em.add_field(name='***Audit Log: Step 4/4***', value='reply with a channel id. Reply with "NONE" to skip this step.', inline=True)
     await sent.edit(embed=em)
     response = await respond(self=self,ctx=ctx)
