@@ -21,6 +21,7 @@ class Experimental(commands.Cog):
   async def server(self,ctx):
     await serverSet(self=self,ctx=ctx)
 
+  @commands.command()
   async def invalid(self,ctx):
     guildID = ctx.guild.id
     result = svrCollection.find_one({"_id":guildID})
