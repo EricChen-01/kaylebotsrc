@@ -55,7 +55,7 @@ async def serverSet(self,ctx):
     while(True):
         response = await respond(self=self,ctx=ctx)
         if response != "NONE":
-            isChannel = self.client.get_channel(id=response)
+            isChannel = self.client.get_channel(id=f'{response}')
             if isChannel != None:
                 channel = response
                 channelComplete = True
