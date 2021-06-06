@@ -62,6 +62,8 @@ async def serverSet(self,ctx):
                 break
             else:
                 await ctx.send('Invalid Channel.')
+        else:
+            break
 
     #join message
     await clearEmbed(self, ctx, em)
