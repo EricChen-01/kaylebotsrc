@@ -39,7 +39,7 @@ async def serverSet(self,ctx):
     em.add_field(name='***Channel ID: Step 1/4***', value='reply with a channel id. Reply with "NONE" to skip this step. ', inline=True)
     em.add_field(name='***NOTE:***', value ='replying with "NONE" will skips steps 2 and 3.', inline=False)
     sent = await ctx.send(embed=em)
-    await sent.add_reaction(":sunglasses:")
+    await sent.add_reaction(":sparkling_heart:")
     response = await respond(self=self,ctx=ctx)
     if response != "NONE":
         channel = response
