@@ -18,7 +18,7 @@ class Experimental(commands.Cog):
     await serverSet(self=self,ctx=ctx)
 
   @commands.command()
-  async def checker(self,ctx):
+  async def checker(self,ctx, message):
       await isChannel(self,ctx, ctx.message) 
  
 
