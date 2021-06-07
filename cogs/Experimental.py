@@ -109,16 +109,19 @@ async def isValid(self,ctx,response):
     channel_ID= None
     guild = ctx.guild
     if response.startswith('<#'):
+        print('inside response.startswith')
         size = len(response)
         channelID = response[2:size - 1]
         channel = discord.utils.get(guild.text_channels, id=int(channelID))
         if channel != None:
             channel_ID = int(channelID)
     elif response.isdecimal():
+        print('inside response.isdecimal')
         channel = discord.utils.get(guild.text_channels, id=int(response))
         if channel != None:
             channel_ID = int(response)
     else:
+        print('else block in valid')
         channel = None
     
     return channel_ID
