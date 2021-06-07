@@ -57,6 +57,8 @@ async def serverSet(self,ctx):
                 channel = valid
                 channelComplete = True
                 break
+        elif response == None:
+            pass
         else:
             break
             
@@ -108,6 +110,7 @@ async def respond(self,ctx):
         msg = await self.client.wait_for("message", check= lambda message: message.author == ctx.author and message.channel == ctx.channel, timeout = 5.0)
     except asyncio.TimeoutError:
         await ctx.send('Setup timed out.')
+        return None
     else:
         message = msg.content
         if message == "NONE":
