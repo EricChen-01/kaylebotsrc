@@ -22,8 +22,9 @@ class Experimental(commands.Cog):
   async def invalid(self,ctx):
     response = await respond(self,ctx)
     print(response)
-    if isinstance(response ,discord.TextChannel):
-        channel =  response
+    if response.startswith('<#'):
+        channelName = response[2:1]
+        channel =  self.client.get_channel(name=channelName)
     elif response.isdecimal():
         channel =  self.client.get_channel(id=int(response))
     else:
