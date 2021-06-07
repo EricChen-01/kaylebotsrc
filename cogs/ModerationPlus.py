@@ -34,12 +34,12 @@ class ModerationPlus(commands.Cog):
     userName = member.name
     guildName = member.guild
     mentionUser = member.mention
-    memberCount = member.guild.member_count
+    count = member.guild.member_count
 
     if result == None or result["channel"] == None or channel == None or result["join"] == None:
       return
     else:
-      embed = discord.Embed(title="***Person Joined***",color=0x14749F, description=str(result["join"]).format(members=memberCount,mention=mentionUser,user=userName))
+      embed = discord.Embed(title="***Person Joined***",color=0x14749F, description=str(result["join"]).format(count=count,mention=mentionUser,user=userName, guildName=guildName))
       embed.set_thumbnail(url=f'{member.avatar_url}')
       embed.set_author(name=f'{member.name}', icon_url=f'{member.avatar_url}')
       embed.set_footer(text=f"{member.guild}", icon_url=f"{member.guild.icon_url}")
@@ -64,12 +64,12 @@ class ModerationPlus(commands.Cog):
     userName = member.name
     guildName = member.guild
     mentionUser = member.mention
-    memberCount = member.guild.member_count
+    count = member.guild.member_count
 
     if result == None or result["channel"] == None or channel == None or result["leave"] == None:
       return
     else:
-      embed = discord.Embed(title="***Person Left :(***",color=0x14749F, description=str(result["leave"]).format(members=memberCount,mention=mentionUser,user=userName))
+      embed = discord.Embed(title="***Person Left :(***",color=0x14749F, description=str(result["leave"]).format(count=count,mention=mentionUser,user=userName, guildName=guildName))
       embed.set_thumbnail(url=f'{member.avatar_url}')
       embed.set_author(name=f'{member.name}', icon_url=f'{member.avatar_url}')
       embed.set_footer(text=f"{member.guild}", icon_url=f"{member.guild.icon_url}")

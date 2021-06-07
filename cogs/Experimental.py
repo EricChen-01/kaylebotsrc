@@ -74,7 +74,8 @@ async def serverSet(self,ctx):
     await clearEmbed(self, ctx, em)
     await sent.add_reaction("\U0001f922")
     if channelComplete:
-        em.add_field(name='***Join Message: Step 2/4***', value='reply with a join message. Reply with "NONE" to skip this step. Reply with "QUIT" to end setup.', inline=True)
+        em.add_field(name='***Join Message: Step 2/4***', value='Reply with a join message. Reply with "NONE" to skip this step. Reply with "QUIT" to end setup.', inline=True)
+        em.add_field(name='***Special tags***', value="Add {count}, {guildName} ,{mention}, and {user} to customize the message :D", inline=False)
         await sent.edit(embed=em)
         response = await respond(self=self,ctx=ctx)
         if response == None or response == "QUIT":
@@ -95,6 +96,7 @@ async def serverSet(self,ctx):
     await sent.add_reaction("\U0001f44d")
     if channelComplete:
         em.add_field(name='***Leave Message: Step 3/4***', value='reply with a Leave Message. Reply with "NONE" to skip this step. Reply with "QUIT" to end setup.', inline=True)
+        em.add_field(name='***Special tags***', value="Add {count}, {guildName} ,{mention}, and {user} to customize the message :D", inline=False)
         await sent.edit(embed=em)
         response = await respond(self=self,ctx=ctx)
 
@@ -158,7 +160,7 @@ async def serverSet(self,ctx):
     
 async def respond(self,ctx):
     try:
-        msg = await self.client.wait_for("message", check= lambda message: message.author == ctx.author and message.channel == ctx.channel, timeout = 30.0)
+        msg = await self.client.wait_for("message", check= lambda message: message.author == ctx.author and message.channel == ctx.channel, timeout = 60.0)
     except asyncio.TimeoutError:
         await ctx.send('Setup timed out.')
         return None
