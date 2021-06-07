@@ -26,10 +26,10 @@ class Experimental(commands.Cog):
         }
         category = await ctx.guild.create_category(name='SERVER INFO', overwrites=overwrites)
 
-        welcomeChannel = category.create_text_channel(name="Welcome", overwrites = overwrites)
+        welcomeChannel = await category.create_text_channel(name="Welcome", overwrites = overwrites)
         joinMessage = "Welcome {user} to the server!"
         leaveMessage = "{user} left the server :("
-        logChannel = category.create_text_channel(name="logs", overwrites = overwrites)
+        logChannel = await category.create_text_channel(name="logs", overwrites = overwrites)
 
         em = discord.Embed(title ='***Server Auto Setup***',color=0x14749F)
         em.add_field(name='***Setup Complete***', value='These are your server settings.', inline=True)
