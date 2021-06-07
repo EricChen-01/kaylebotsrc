@@ -85,9 +85,9 @@ class ModerationPlus(commands.Cog):
     guildID = message.guild.id
     result = svrCollection.find_one({"_id":guildID})
 
-    if result == None:
-      return
-    elif result['audit_log'] == None:
+    channel = discord.utils.get(message.guild.text_channels, id=result["audit_log"])
+
+    if result == None or result['audit_log'] == None or channel == None:
       return
     else:
       embed = discord.Embed(title=f"***Message Deleted in #{message.channel.name}***",color=0x14749F, description=f'{msg}')
@@ -95,18 +95,17 @@ class ModerationPlus(commands.Cog):
       embed.set_author(name=f'{author.name}', icon_url=f'{author.avatar_url}')
       embed.set_footer(text=f"{author.guild}", icon_url=f"{author.guild.icon_url}")
       embed.timestamp = datetime.datetime.utcnow()
-      channel =  self.client.get_channel(id=result["audit_log"])
       await channel.send(embed=embed)
   
   #server data removeal apon leave
   @commands.Cog.listener()
   async def on_guild_remove(self,guild):
-    guildID = ctx.guild.id
+    guildID = guild.id
     result = svrCollection.find_one({"_id":guildID})
     if result == None:
       return
     else:
-      svrCollection.delete_one({"_id":guild.id})
+      svrCollection.delete_one({"_id":guildID})
 
   #on role creation
   @commands.Cog.listener()
@@ -118,16 +117,15 @@ class ModerationPlus(commands.Cog):
     guild = role.guild
     result = svrCollection.find_one({"_id":guildID})
 
-    if result == None:
-      return
-    elif result['audit_log'] == None:
+    channel = discord.utils.get(guild.text_channels, id=result["audit_log"])
+
+    if result == None or result['audit_log'] == None or channel == None:
       return
     else:
       embed = discord.Embed(title=f"***Role was created: @{role_name}***",color=0x14749F)
       embed.set_thumbnail(url=f'{guild.icon_url}')
       embed.set_footer(text=f"{guild}", icon_url=f"{guild.icon_url}")
       embed.timestamp = time_of_creation
-      channel =  self.client.get_channel(id=result["audit_log"])
       await channel.send(embed=embed)
 
   #commands  
