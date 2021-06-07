@@ -52,6 +52,7 @@ async def serverSet(self,ctx):
                 print('in else block')
                 channel = valid
                 channelComplete = True
+                break
         else:
             break
             
