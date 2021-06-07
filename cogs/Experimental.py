@@ -71,6 +71,9 @@ async def serverSet(self,ctx):
         em.add_field(name='***Join Message: Step 2/4***', value='reply with a join message. Reply with "NONE" to skip this step.', inline=True)
         await sent.edit(embed=em)
         response = await respond(self=self,ctx=ctx)
+        if response == None:
+            return
+
         if response != "NONE":
             joinMessage = response
 
@@ -82,6 +85,9 @@ async def serverSet(self,ctx):
         await sent.edit(embed=em)
         response = await respond(self=self,ctx=ctx)
 
+        if response == None:
+            return
+            
         if response != "NONE":
             leaveMessage = response
 
