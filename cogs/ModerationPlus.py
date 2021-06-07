@@ -36,7 +36,7 @@ class ModerationPlus(commands.Cog):
     mentionUser = member.mention
     memberCount = member.guild.member_count
 
-    if result == None or result["channel"] == None or channel == None or result["join"]:
+    if result == None or result["channel"] == None or channel == None or result["join"] == None:
       return
     else:
       embed = discord.Embed(title="***Person Joined***",color=0x14749F, description=str(result["join"]).format(members=memberCount,mention=mentionUser,user=userName))
