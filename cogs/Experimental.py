@@ -49,6 +49,9 @@ async def serverSet(self,ctx):
     await sent.add_reaction("\U0001f60e")
     while(True):
         response = await respond(self=self,ctx=ctx)
+        if response == None:
+            pass
+        
         if response != "NONE":
             valid = await isValid(self,ctx,response)
             if valid == None:
@@ -57,8 +60,6 @@ async def serverSet(self,ctx):
                 channel = valid
                 channelComplete = True
                 break
-        elif response == None:
-            pass
         else:
             break
             
