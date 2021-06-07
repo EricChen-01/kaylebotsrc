@@ -18,25 +18,6 @@ class Experimental(commands.Cog):
   async def server(self,ctx):
     await serverSet(self=self,ctx=ctx)
 
-  @commands.command()
-  async def invalid(self,ctx):
-    response = await respond(self,ctx)
-    print(response)
-    if response.startswith('<#'):
-        size = len(response)
-        channelID = response[2:size - 1]
-        channel =  self.client.get_channel(id=int(channelID))
-    elif response.isdecimal():
-        guild = ctx.guild
-        channel = discord.utils.get(guild.text_channels, id=int(response))
-        #channel =  self.client.get_channel(id=int(response))
-    else:
-        channel = None
-    
-    if channel != None:
-        await channel.send(f'Channel exists')
-    else:
-        await ctx.send('Invalid Channel.')
         
 def setup(client):
   client.add_cog(Experimental(client))
@@ -59,10 +40,17 @@ async def serverSet(self,ctx):
     em.add_field(name='***NOTE:***', value ='replying with "NONE" will skips steps 2 and 3.', inline=False)
     sent = await ctx.send(embed=em)
     await sent.add_reaction("\U0001f60e")
-    response = await respond(self=self,ctx=ctx)
-    if response != "NONE":
-        channel = response
-        channelComplete = True
+    while(True):
+        response = await respond(self=self,ctx=ctx)
+        if response != "NONE":
+            valid = isValid(self,ctx,response)
+            if valid == None:
+                ctx.send('This is an invalid text channel. Please enter a valid text channel.')
+            else:
+                channel = valid
+                channelComplete = True
+        else:
+            break
             
 
     #join message
@@ -113,6 +101,25 @@ async def respond(self,ctx):
 
 async def clearEmbed(self,ctx, embed):
     embed.clear_fields()
+
+async def isValid(self,ctx,response):
+    ID = None
+    guild = ctx.guild
+    if response.startswith('<#'):
+        size = len(response)
+        channelID = response[2:size - 1]
+        channel = discord.utils.get(guild.text_channels, id=int(channelID))
+        if channel != None:
+            ID = int(channelID)
+    elif response.isdecimal():
+        channel = discord.utils.get(guild.text_channels, id=int(response))
+        if channel != None:
+            ID = int(response)
+    else:
+        channel = None
+    
+    return ID
+
 
 
 
