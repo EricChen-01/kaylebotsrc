@@ -43,13 +43,11 @@ async def serverSet(self,ctx):
     while(True):
         response = await respond(self=self,ctx=ctx)
         if response != "NONE":
-            print('inside response != NONE')
             valid = await isValid(self,ctx,response)
             print(f'valid = {valid}')
             if valid == None:
                 await ctx.send('This is an invalid text channel. Please enter a valid text channel.')
             else:
-                print('in else block')
                 channel = valid
                 channelComplete = True
                 break
@@ -110,19 +108,16 @@ async def isValid(self,ctx,response):
     channel_ID= None
     guild = ctx.guild
     if response.startswith('<#'):
-        print('inside response.startswith')
         size = len(response)
         channelID = response[2:size - 1]
         channel = discord.utils.get(guild.text_channels, id=int(channelID))
         if channel != None:
             channel_ID = int(channelID)
     elif response.isdecimal():
-        print('inside response.isdecimal')
         channel = discord.utils.get(guild.text_channels, id=int(response))
         if channel != None:
             channel_ID = int(response)
     else:
-        print('else block in valid')
         channel = None
     
     return channel_ID
