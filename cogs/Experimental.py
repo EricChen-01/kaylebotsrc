@@ -24,8 +24,8 @@ class Experimental(commands.Cog):
     print(response)
     if response.startswith('<#'):
         size = len(response)
-        channelName = response[2:size - 1]
-        channel =  self.client.get_channel(name=channelName)
+        channelID = response[2:size - 1]
+        channel =  self.client.get_channel(id=int(channelID))
     elif response.isdecimal():
         channel =  self.client.get_channel(id=int(response))
     else:
