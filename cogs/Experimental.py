@@ -23,9 +23,9 @@ class Experimental(commands.Cog):
         em.set_author(name=f'{ctx.author.name}', icon_url=f'{ctx.author.avatar_url}')
         em.set_footer(text=f"{ctx.author.guild}", icon_url=f"{ctx.author.guild.icon_url}")
         await ctx.send('Auto Server Setup.')
-        
     else:
         await serverSet(self=self,ctx=ctx)
+        
 def setup(client):
   client.add_cog(Experimental(client))
 
@@ -109,7 +109,6 @@ async def respond(self,ctx):
     except asyncio.TimeoutError:
         await ctx.send('Setup timed out.')
         pass
-
     else:
         message = msg.content
         if message == "NONE":
