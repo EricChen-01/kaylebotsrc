@@ -93,6 +93,9 @@ async def serverSet(self,ctx):
     
     while(True):
         response = await respond(self=self,ctx=ctx)
+        if response == None:
+            return
+
         if response != "NONE":
             valid = await isValid(self,ctx,response)
             if valid == None:
