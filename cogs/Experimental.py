@@ -19,8 +19,11 @@ class Experimental(commands.Cog):
   @commands.command()
   async def _setup(self,ctx, setupMode = None):
     if setupMode == "auto":
+        em = discord.Embed(title ='***Server Setup***',color=0x14749F)
+        em.set_author(name=f'{ctx.author.name}', icon_url=f'{ctx.author.avatar_url}')
+        em.set_footer(text=f"{ctx.author.guild}", icon_url=f"{ctx.author.guild.icon_url}")
         await ctx.send('Auto Server Setup.')
-        await serverSet(self=self,ctx=ctx)
+        
     else:
         await serverSet(self=self,ctx=ctx)
 def setup(client):
@@ -103,8 +106,9 @@ async def serverSet(self,ctx):
 async def respond(self,ctx):
     try:
         msg = await self.client.wait_for("message", check= lambda message: message.author == ctx.author and message.channel == ctx.channel, timeout = 30.0)
-    except asyncio.TImeoutError:
+    except asyncio.TimeoutError:
         await ctx.send('Setup timed out.')
+        pass
 
     else:
         message = msg.content
