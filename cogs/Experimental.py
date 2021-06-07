@@ -22,7 +22,14 @@ class Experimental(commands.Cog):
   async def invalid(self,ctx):
     response = await respond(self,ctx)
     
-    channel =  self.client.get_channel(id=int(response))
+    if response.startswith('#'):
+        channelName = response.content[1:]
+        channel =  self.client.get_channel(name=channelName)
+    elif response.isdecimal():
+        channel =  self.client.get_channel(id=int(response))
+    else:
+        channel = None
+    
     if channel != None:
         await channel.send(f'Channel exists')
     else:
