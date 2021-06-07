@@ -25,7 +25,7 @@ class Experimental(commands.Cog):
         await ctx.send('Auto Server Setup.')
     else:
         await serverSet(self=self,ctx=ctx)
-        
+
 def setup(client):
   client.add_cog(Experimental(client))
 
@@ -105,10 +105,9 @@ async def serverSet(self,ctx):
     
 async def respond(self,ctx):
     try:
-        msg = await self.client.wait_for("message", check= lambda message: message.author == ctx.author and message.channel == ctx.channel, timeout = 30.0)
+        msg = await self.client.wait_for("message", check= lambda message: message.author == ctx.author and message.channel == ctx.channel, timeout = 5.0)
     except asyncio.TimeoutError:
         await ctx.send('Setup timed out.')
-        pass
     else:
         message = msg.content
         if message == "NONE":
