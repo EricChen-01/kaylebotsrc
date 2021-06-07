@@ -47,7 +47,7 @@ async def serverSet(self,ctx):
             valid = await isValid(self,ctx,response)
             print(f'valid = {valid}')
             if valid == None:
-                ctx.send('This is an invalid text channel. Please enter a valid text channel.')
+                await ctx.send('This is an invalid text channel. Please enter a valid text channel.')
             else:
                 print('in else block')
                 channel = valid
@@ -55,7 +55,6 @@ async def serverSet(self,ctx):
         else:
             break
             
-
 
     #join message
     await clearEmbed(self, ctx, em)
