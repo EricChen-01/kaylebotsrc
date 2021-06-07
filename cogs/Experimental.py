@@ -7,7 +7,9 @@ import datetime
 import pymongo
 from pymongo import MongoClient
 
-
+serverCluster = MongoClient(f'mongodb+srv://Kayle:{os.getenv("mongoDBPassword")}@discordkayledb.ddcpx.mongodb.net/server?retryWrites=true&w=majority')
+serverdb = serverCluster["server"]
+svrCollection = serverdb["server"]
 
 class Experimental(commands.Cog):
   def __init__(self, client):
@@ -94,6 +96,8 @@ async def serverSet(self,ctx):
             break
 
     await ctx.send(f"Channel: {channel}\nJoinMessage: {joinMessage}\nleaveMessage: {leaveMessage}\naudit_log: {audit_log}")
+    await addServer(self,ctx,channel,joinMessage, leaveMessage, audit_log)
+    
 
 async def respond(self,ctx):
     try:
@@ -129,6 +133,16 @@ async def isValid(self,ctx,response):
     
     return channel_ID
 
+async def addServer(self,ctx,channel,join, leave, audit_log):
+    guildID = ctx.guild.id
+    result = svrCollection.find_one({"_id":guildID})
+    if result == None:
+        newServer = {"_id":guildID, "channel": channel, "join": join, "leave": leave, "audit_log": audit_log}
+        svrCollection.insert_one(newServer)
+        await ctx.send('Server successfully registered.')
+    else:
+        svrCollection.update_one({"_id":ctx.guild.id}, {"$set":{"channel": channel, "join":join, "leave":leave, "audit_log": audit_log}})
+        await ctx.send("Server setting(s) reset.")
 
 
 
