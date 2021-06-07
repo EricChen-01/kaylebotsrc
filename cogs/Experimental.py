@@ -43,10 +43,13 @@ async def serverSet(self,ctx):
     while(True):
         response = await respond(self=self,ctx=ctx)
         if response != "NONE":
+            print('inside response != NONE')
             valid = isValid(self,ctx,response)
+            print(f'valid = {valid}')
             if valid == None:
                 ctx.send('This is an invalid text channel. Please enter a valid text channel.')
             else:
+                print('in else block')
                 channel = valid
                 channelComplete = True
         else:
@@ -103,22 +106,22 @@ async def clearEmbed(self,ctx, embed):
     embed.clear_fields()
 
 async def isValid(self,ctx,response):
-    ID = None
+    channel_ID= None
     guild = ctx.guild
     if response.startswith('<#'):
         size = len(response)
         channelID = response[2:size - 1]
         channel = discord.utils.get(guild.text_channels, id=int(channelID))
         if channel != None:
-            ID = int(channelID)
+            channel_ID = int(channelID)
     elif response.isdecimal():
         channel = discord.utils.get(guild.text_channels, id=int(response))
         if channel != None:
-            ID = int(response)
+            channel_ID = int(response)
     else:
         channel = None
     
-    return ID
+    return channel_ID
 
 
 
