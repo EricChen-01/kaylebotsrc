@@ -44,7 +44,6 @@ async def serverSet(self,ctx):
         response = await respond(self=self,ctx=ctx)
         if response != "NONE":
             valid = await isValid(self,ctx,response)
-            print(f'valid = {valid}')
             if valid == None:
                 await ctx.send('This is an invalid text channel. Please enter a valid text channel.')
             else:
@@ -81,10 +80,18 @@ async def serverSet(self,ctx):
     await sent.add_reaction("\U0001fab3")
     em.add_field(name='***Audit Log: Step 4/4***', value='reply with a channel id. Reply with "NONE" to skip this step.', inline=True)
     await sent.edit(embed=em)
-    response = await respond(self=self,ctx=ctx)
-
-    if response != "NONE":
-        audit_log = response
+    
+    while(True):
+        response = await respond(self=self,ctx=ctx)
+        if response != "NONE":
+            valid = await isValid(self,ctx,response)
+            if valid == None:
+                await ctx.send('This is an invalid text channel. Please enter a valid text channel.')
+            else:
+                audit_log = valid
+                break
+        else:
+            break
 
     await ctx.send(f"Channel: {channel}\nJoinMessage: {joinMessage}\nleaveMessage: {leaveMessage}\naudit_log: {audit_log}")
 
