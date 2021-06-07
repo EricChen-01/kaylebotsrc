@@ -23,7 +23,7 @@ class Experimental(commands.Cog):
     response = await respond(self,ctx)
     print(response)
     if response.startswith('<#'):
-        channelName = response[2:1]
+        channelName = response[2:-1]
         channel =  self.client.get_channel(name=channelName)
     elif response.isdecimal():
         channel =  self.client.get_channel(id=int(response))
