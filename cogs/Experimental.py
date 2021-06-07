@@ -44,7 +44,7 @@ async def serverSet(self,ctx):
         response = await respond(self=self,ctx=ctx)
         if response != "NONE":
             print('inside response != NONE')
-            valid = isValid(self,ctx,response)
+            valid = await isValid(self,ctx,response)
             print(f'valid = {valid}')
             if valid == None:
                 ctx.send('This is an invalid text channel. Please enter a valid text channel.')
