@@ -17,7 +17,7 @@ class Experimental(commands.Cog):
   #commands
   #experimental
   @commands.command()
-  async def setup(self,ctx):
+  async def _setup(self,ctx):
     await serverSet(self=self,ctx=ctx)
         
 def setup(client):
