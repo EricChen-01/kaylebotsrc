@@ -21,8 +21,7 @@ class Experimental(commands.Cog):
   @commands.command()
   async def invalid(self,ctx):
     response = await respond(self,ctx)
-    await ctx.send(isinstance(response ,discord.TextChannel))
-    await ctx.send(isinstance(response ,str))
+    print(response)
     if isinstance(response ,discord.TextChannel):
         channel =  response
     elif response.isdecimal():
