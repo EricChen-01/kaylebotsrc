@@ -142,7 +142,7 @@ async def addServer(self,ctx,channel,join, leave, audit_log):
         await ctx.send('Server successfully registered.')
     else:
         svrCollection.update_one({"_id":ctx.guild.id}, {"$set":{"channel": channel, "join":join, "leave":leave, "audit_log": audit_log}})
-        await ctx.send("Server setting(s) reset.")
+        await ctx.send("Server settings updated")
 
 
 
