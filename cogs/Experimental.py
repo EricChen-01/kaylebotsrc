@@ -17,9 +17,8 @@ class Experimental(commands.Cog):
   #commands
   #experimental
   @commands.command()
-  async def server(self,ctx):
+  async def setup(self,ctx):
     await serverSet(self=self,ctx=ctx)
-
         
 def setup(client):
   client.add_cog(Experimental(client))
@@ -98,7 +97,6 @@ async def serverSet(self,ctx):
     await ctx.send(f"Channel: {channel}\nJoinMessage: {joinMessage}\nleaveMessage: {leaveMessage}\naudit_log: {audit_log}")
     await addServer(self,ctx,channel,joinMessage, leaveMessage, audit_log)
     
-
 async def respond(self,ctx):
     try:
         msg = await self.client.wait_for("message", check= lambda message: message.author == ctx.author and message.channel == ctx.channel, timeout = 30.0)
