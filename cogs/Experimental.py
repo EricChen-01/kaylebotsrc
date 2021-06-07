@@ -56,6 +56,7 @@ async def serverSet(self,ctx):
             break
             
 
+
     #join message
     await clearEmbed(self, ctx, em)
     await sent.add_reaction("\U0001f922")
