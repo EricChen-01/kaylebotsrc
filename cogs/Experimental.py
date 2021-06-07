@@ -17,9 +17,12 @@ class Experimental(commands.Cog):
   #commands
   #experimental
   @commands.command()
-  async def _setup(self,ctx):
-    await serverSet(self=self,ctx=ctx)
-        
+  async def _setup(self,ctx, setupMode = None):
+    if setupMode == "auto":
+        await ctx.send('Auto Server Setup.')
+        await serverSet(self=self,ctx=ctx)
+    else:
+        await serverSet(self=self,ctx=ctx)
 def setup(client):
   client.add_cog(Experimental(client))
 
