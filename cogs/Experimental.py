@@ -87,7 +87,7 @@ async def serverSet(self,ctx):
 
         if response == None:
             return
-            
+
         if response != "NONE":
             leaveMessage = response
 
@@ -117,7 +117,7 @@ async def serverSet(self,ctx):
     
 async def respond(self,ctx):
     try:
-        msg = await self.client.wait_for("message", check= lambda message: message.author == ctx.author and message.channel == ctx.channel, timeout = 5.0)
+        msg = await self.client.wait_for("message", check= lambda message: message.author == ctx.author and message.channel == ctx.channel, timeout = 30.0)
     except asyncio.TimeoutError:
         await ctx.send('Setup timed out.')
         return None
