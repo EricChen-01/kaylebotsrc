@@ -43,13 +43,19 @@ async def serverSet(self,ctx):
     channelComplete = False
 
     #Channel
-    em.add_field(name='***Channel ID: Step 1/4***', value='reply with a channel id. Reply with "NONE" to skip this step. ', inline=True)
+    em.add_field(name='***Channel ID: Step 1/4***', value='reply with a channel id. Reply with "NONE" to skip this step. Reply with "QUIT" to end setup.', inline=True)
     em.add_field(name='***NOTE:***', value ='replying with "NONE" will skips steps 2 and 3.', inline=False)
     sent = await ctx.send(embed=em)
     await sent.add_reaction("\U0001f60e")
     while(True):
         response = await respond(self=self,ctx=ctx)
-        if response == None:
+        if response == None or response == "QUIT":
+            await clearEmbed(self,ctx,em)
+            em.add_field(name='***Setup Cancled***', value='Server setup cancled due to timeout or user selected: "QUIT"', inline=True)
+            em.set_author(name=f'{ctx.author.name}', icon_url=f'{ctx.author.avatar_url}')
+            em.set_footer(text=f"{ctx.author.guild}", icon_url=f"{ctx.author.guild.icon_url}")
+            em.timestamp = datetime.datetime.utcnow()
+            await sent.edit(embed=em)
             return
 
         if response != "NONE":
@@ -68,38 +74,59 @@ async def serverSet(self,ctx):
     await clearEmbed(self, ctx, em)
     await sent.add_reaction("\U0001f922")
     if channelComplete:
-        em.add_field(name='***Join Message: Step 2/4***', value='reply with a join message. Reply with "NONE" to skip this step.', inline=True)
+        em.add_field(name='***Join Message: Step 2/4***', value='reply with a join message. Reply with "NONE" to skip this step. Reply with "QUIT" to end setup.', inline=True)
         await sent.edit(embed=em)
         response = await respond(self=self,ctx=ctx)
-        if response == None:
+        if response == None or response == "QUIT":
+            await clearEmbed(self,ctx,em)
+            em.add_field(name='***Setup Cancled***', value='Server setup cancled due to timeout or user selected: "QUIT"', inline=True)
+            em.set_author(name=f'{ctx.author.name}', icon_url=f'{ctx.author.avatar_url}')
+            em.set_footer(text=f"{ctx.author.guild}", icon_url=f"{ctx.author.guild.icon_url}")
+            em.timestamp = datetime.datetime.utcnow()
+            await sent.edit(embed=em)
             return
 
         if response != "NONE":
             joinMessage = response
 
+
     #leave message
     await clearEmbed(self,ctx,em)
     await sent.add_reaction("\U0001f44d")
     if channelComplete:
-        em.add_field(name='***Leave Message: Step 3/4***', value='reply with a Leave Message. Reply with "NONE" to skip this step.', inline=True)
+        em.add_field(name='***Leave Message: Step 3/4***', value='reply with a Leave Message. Reply with "NONE" to skip this step. Reply with "QUIT" to end setup.', inline=True)
         await sent.edit(embed=em)
         response = await respond(self=self,ctx=ctx)
 
-        if response == None:
+        if response == None or response == "QUIT":
+            await clearEmbed(self,ctx,em)
+            em.add_field(name='***Setup Cancled***', value='Server setup cancled due to timeout or user selected: "QUIT"', inline=True)
+            em.set_author(name=f'{ctx.author.name}', icon_url=f'{ctx.author.avatar_url}')
+            em.set_footer(text=f"{ctx.author.guild}", icon_url=f"{ctx.author.guild.icon_url}")
+            em.timestamp = datetime.datetime.utcnow()
+            await sent.edit(embed=em)
             return
 
         if response != "NONE":
             leaveMessage = response
 
+
     #audit log
     await clearEmbed(self,ctx,em)
     await sent.add_reaction("\U0001fab3")
-    em.add_field(name='***Audit Log: Step 4/4***', value='reply with a channel id. Reply with "NONE" to skip this step.', inline=True)
+    em.add_field(name='***Audit Log: Step 4/4***', value='reply with a channel id. Reply with "NONE" to skip this step. Reply with "QUIT" to end setup.', inline=True)
     await sent.edit(embed=em)
     
+
     while(True):
         response = await respond(self=self,ctx=ctx)
-        if response == None:
+        if response == None or response == "QUIT":
+            await clearEmbed(self,ctx,em)
+            em.add_field(name='***Setup Cancled***', value='Server setup cancled due to timeout or user selected: "QUIT"', inline=True)
+            em.set_author(name=f'{ctx.author.name}', icon_url=f'{ctx.author.avatar_url}')
+            em.set_footer(text=f"{ctx.author.guild}", icon_url=f"{ctx.author.guild.icon_url}")
+            em.timestamp = datetime.datetime.utcnow()
+            await sent.edit(embed=em)
             return
 
         if response != "NONE":
@@ -112,7 +139,21 @@ async def serverSet(self,ctx):
         else:
             break
 
-    await ctx.send(f"Channel: {channel}\nJoinMessage: {joinMessage}\nleaveMessage: {leaveMessage}\naudit_log: {audit_log}")
+
+    #displays final setup
+    await clearEmbed(self,ctx,em)
+    em.add_field(name='***Setup Complete***', value='These are your server settings.', inline=True)
+    em.add_field(name='***Channel***', value=f'{channel}', inline=True)
+    em.add_field(name='***Join Message***', value=f'{joinMessage}', inline=True)
+    em.add_field(name='***Leave Message***', value=f'{leaveMessage}', inline=True)
+    em.add_field(name='***Audit Log***', value=f'{audit_log}', inline=True)
+    em.set_author(name=f'{ctx.author.name}', icon_url=f'{ctx.author.avatar_url}')
+    em.set_footer(text=f"{ctx.author.guild}", icon_url=f"{ctx.author.guild.icon_url}")
+    em.timestamp = datetime.datetime.utcnow()
+    await sent.edit(embed=em)
+    await sent.add_reaction("\U00002705")
+    
+    #add/update Server
     await addServer(self,ctx,channel,joinMessage, leaveMessage, audit_log)
     
 async def respond(self,ctx):
@@ -159,6 +200,7 @@ async def addServer(self,ctx,channel,join, leave, audit_log):
     else:
         svrCollection.update_one({"_id":ctx.guild.id}, {"$set":{"channel": channel, "join":join, "leave":leave, "audit_log": audit_log}})
         await ctx.send("Server settings updated")
+
 
 
 
