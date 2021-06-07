@@ -19,10 +19,30 @@ class Experimental(commands.Cog):
   @commands.command()
   async def _setup(self,ctx, setupMode = None):
     if setupMode == "auto":
-        em = discord.Embed(title ='***Server Setup***',color=0x14749F)
+        #creating a new category
+        overwrites = {
+            ctx.guild.default_role: discord.PermissionOverwrite(send_messages=True),
+            ctx.guild.me: discord.PermissionOverwrite(read_messages=True)
+        }
+        category = await ctx.guild.create_category(name='SERVER INFO', overwrites=overwrites)
+
+        welcomeChannel = category.create_text_channel(name="Welcome", overwrites = overwrites)
+        joinMessage = "Welcome {user} to the server!"
+        leaveMessage = "{user} left the server :("
+        logChannel = category.create_text_channel(name="logs", overwrites = overwrites)
+
+        em = discord.Embed(title ='***Server Auto Setup***',color=0x14749F)
+        em.add_field(name='***Setup Complete***', value='These are your server settings.', inline=True)
+        em.add_field(name='***Channel***', value=f'{welcomeChannel.id}', inline=True)
+        em.add_field(name='***Join Message***', value=f'{joinMessage}', inline=True)
+        em.add_field(name='***Leave Message***', value=f'{leaveMessage}', inline=True)
+        em.add_field(name='***Audit Log***', value=f'{logChannel.id}', inline=True)
         em.set_author(name=f'{ctx.author.name}', icon_url=f'{ctx.author.avatar_url}')
         em.set_footer(text=f"{ctx.author.guild}", icon_url=f"{ctx.author.guild.icon_url}")
-        await ctx.send('Auto Server Setup.')
+        em.timestamp = datetime.datetime.utcnow()
+
+        await ctx.send(embed=em)
+        await addServer(self,ctx, welcomeChannel.id, joinMessage, leaveMessage, logChannel.id)
     else:
         await serverSet(self=self,ctx=ctx)
 
