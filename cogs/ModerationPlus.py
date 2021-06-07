@@ -132,11 +132,37 @@ class ModerationPlus(commands.Cog):
 
   #commands  
   #server registration
-  @commands.group(invoke_without_command=True)
-  async def setup(self,ctx):
-    await ctx.send('Setup commands: \nsetup server \nsetup channel [#channel] \nsetup join [message] \nsetup leave [message] \nsetup log [#channel] \nsetup reset')
+  @commands.command()
+  async def setup(self,ctx, setupMode = None):
+    if setupMode == "auto":
+        #creating a new category
+        overwrites = {
+            ctx.guild.default_role: discord.PermissionOverwrite(send_messages=False),
+            ctx.guild.me: discord.PermissionOverwrite(send_messages=True)
+        }
+        category = await ctx.guild.create_category(name='SERVER INFO', overwrites=overwrites)
 
-  @setup.command()
+        welcomeChannel = await category.create_text_channel(name="Welcome", overwrites = overwrites)
+        joinMessage = "Welcome {user} to the server!"
+        leaveMessage = "{user} left the server :("
+        logChannel = await category.create_text_channel(name="logs", overwrites = overwrites)
+
+        em = discord.Embed(title ='***Server Auto Setup***',color=0x14749F)
+        em.add_field(name='***Setup Complete***', value='These are your server settings.', inline=False)
+        em.add_field(name='***Channel***', value=f'{welcomeChannel.id}', inline=False)
+        em.add_field(name='***Join Message***', value=f'{joinMessage}', inline=False)
+        em.add_field(name='***Leave Message***', value=f'{leaveMessage}', inline=False)
+        em.add_field(name='***Audit Log***', value=f'{logChannel.id}', inline=False)
+        em.set_author(name=f'{ctx.author.name}', icon_url=f'{ctx.author.avatar_url}')
+        em.set_footer(text=f"{ctx.author.guild}", icon_url=f"{ctx.author.guild.icon_url}")
+        em.timestamp = datetime.datetime.utcnow()
+
+        await ctx.send(embed=em)
+        await addServer(self,ctx, welcomeChannel.id, joinMessage, leaveMessage, logChannel.id)
+    else:
+        await serverSet(self=self,ctx=ctx)
+
+  @commands.command()
   @commands.has_permissions(administrator=True)
   async def log(self,ctx, channel: discord.TextChannel):
     guildID = ctx.message.author.guild.id
@@ -148,19 +174,7 @@ class ModerationPlus(commands.Cog):
       svrCollection.update_one({"_id":ctx.guild.id}, {"$set":{"audit_log": channel.id}})
       await ctx.send(f'Audit log channel has been updated to {channel.mention}')
 
-  @setup.command()
-  @commands.has_permissions(administrator=True)
-  async def server(self,ctx):
-    guildID = ctx.guild.id
-    result = svrCollection.find_one({"_id":guildID})
-    if result == None:
-      newServer = {"_id":guildID, "channel": None, "join": None, "leave": None, "audit_log": None}
-      svrCollection.insert_one(newServer)
-      await ctx.send('Server successfully registered.')
-    else:
-      await ctx.send('This server is already registered.')
-
-  @setup.command()
+  @commands.command()
   @commands.has_permissions(administrator=True)
   async def channel(self,ctx, channel: discord.TextChannel):
     guildID = ctx.message.author.guild.id
@@ -172,7 +186,7 @@ class ModerationPlus(commands.Cog):
       svrCollection.update_one({"_id":ctx.guild.id}, {"$set":{"channel": channel.id}})
       await ctx.send(f'Channel has been updated to {channel.mention}')
 
-  @setup.command()
+  @commands.command()
   @commands.has_permissions(administrator=True)
   async def join(self,ctx, *,msg):
     guildID = ctx.guild.id
@@ -184,7 +198,7 @@ class ModerationPlus(commands.Cog):
       svrCollection.update_one({"_id":ctx.guild.id}, {"$set":{"join": msg}})
       await ctx.send(f'Welcome message has been set to "{msg}".')
 
-  @setup.command()
+  @commands.command()
   @commands.has_permissions(administrator=True)
   async def leave(self,ctx, *,msg):
     guildID = ctx.guild.id
@@ -196,7 +210,7 @@ class ModerationPlus(commands.Cog):
       svrCollection.update_one({"_id":ctx.guild.id}, {"$set":{"leave": msg}})
       await ctx.send(f'Leave message has been set to "{msg}".')
 
-  @setup.command()
+  @commands.command()
   @commands.has_permissions(administrator=True)
   async def reset(self,ctx, *,resets = "all"):
     guildID = ctx.guild.id
@@ -358,3 +372,177 @@ class ModerationPlus(commands.Cog):
 
 def setup(client):
   client.add_cog(ModerationPlus(client))
+
+async def serverSet(self,ctx):
+    #Embed and variables
+    em = discord.Embed(title ='***Server Setup***',color=0x14749F)
+    em.set_author(name=f'{ctx.author.name}', icon_url=f'{ctx.author.avatar_url}')
+    em.set_footer(text=f"{ctx.author.guild}", icon_url=f"{ctx.author.guild.icon_url}")
+    em.timestamp = datetime.datetime.utcnow()
+    channel = None
+    joinMessage = None
+    leaveMessage = None
+    audit_log = None
+
+    channelComplete = False
+
+    #Channel
+    em.add_field(name='***Channel ID: Step 1/4***', value='reply with a channel id. Reply with "NONE" to skip this step. Reply with "QUIT" to end setup.', inline=True)
+    em.add_field(name='***NOTE:***', value ='replying with "NONE" will skips steps 2 and 3.', inline=False)
+    sent = await ctx.send(embed=em)
+    await sent.add_reaction("\U0001f60e")
+    while(True):
+        response = await respond(self=self,ctx=ctx)
+        if response == None or response == "QUIT":
+            await clearEmbed(self,ctx,em)
+            em.add_field(name='***Setup Cancled***', value='Server setup cancled due to timeout or user selected: "QUIT"', inline=True)
+            em.set_author(name=f'{ctx.author.name}', icon_url=f'{ctx.author.avatar_url}')
+            em.set_footer(text=f"{ctx.author.guild}", icon_url=f"{ctx.author.guild.icon_url}")
+            em.timestamp = datetime.datetime.utcnow()
+            await sent.edit(embed=em)
+            return
+
+        if response != "NONE":
+            valid = await isValid(self,ctx,response)
+            if valid == None:
+                await ctx.send('This is an invalid text channel. Please enter a valid text channel.')
+            else:
+                channel = valid
+                channelComplete = True
+                break
+        else:
+            break
+            
+
+    #join message
+    await clearEmbed(self, ctx, em)
+    await sent.add_reaction("\U0001f922")
+    if channelComplete:
+        em.add_field(name='***Join Message: Step 2/4***', value='Reply with a join message. Reply with "NONE" to skip this step. Reply with "QUIT" to end setup.', inline=True)
+        em.add_field(name='***Special tags***', value="Add {count}, {guildName} ,{mention}, and {user} to customize the message :D", inline=False)
+        await sent.edit(embed=em)
+        response = await respond(self=self,ctx=ctx)
+        if response == None or response == "QUIT":
+            await clearEmbed(self,ctx,em)
+            em.add_field(name='***Setup Cancled***', value='Server setup cancled due to timeout or user selected: "QUIT"', inline=True)
+            em.set_author(name=f'{ctx.author.name}', icon_url=f'{ctx.author.avatar_url}')
+            em.set_footer(text=f"{ctx.author.guild}", icon_url=f"{ctx.author.guild.icon_url}")
+            em.timestamp = datetime.datetime.utcnow()
+            await sent.edit(embed=em)
+            return
+
+        if response != "NONE":
+            joinMessage = response
+
+
+    #leave message
+    await clearEmbed(self,ctx,em)
+    await sent.add_reaction("\U0001f44d")
+    if channelComplete:
+        em.add_field(name='***Leave Message: Step 3/4***', value='reply with a Leave Message. Reply with "NONE" to skip this step. Reply with "QUIT" to end setup.', inline=True)
+        em.add_field(name='***Special tags***', value="Add {count}, {guildName} ,{mention}, and {user} to customize the message :D", inline=False)
+        await sent.edit(embed=em)
+        response = await respond(self=self,ctx=ctx)
+
+        if response == None or response == "QUIT":
+            await clearEmbed(self,ctx,em)
+            em.add_field(name='***Setup Cancled***', value='Server setup cancled due to timeout or user selected: "QUIT"', inline=True)
+            em.set_author(name=f'{ctx.author.name}', icon_url=f'{ctx.author.avatar_url}')
+            em.set_footer(text=f"{ctx.author.guild}", icon_url=f"{ctx.author.guild.icon_url}")
+            em.timestamp = datetime.datetime.utcnow()
+            await sent.edit(embed=em)
+            return
+
+        if response != "NONE":
+            leaveMessage = response
+
+
+    #audit log
+    await clearEmbed(self,ctx,em)
+    await sent.add_reaction("\U0001fab3")
+    em.add_field(name='***Audit Log: Step 4/4***', value='reply with a channel id. Reply with "NONE" to skip this step. Reply with "QUIT" to end setup.', inline=True)
+    await sent.edit(embed=em)
+    
+
+    while(True):
+        response = await respond(self=self,ctx=ctx)
+        if response == None or response == "QUIT":
+            await clearEmbed(self,ctx,em)
+            em.add_field(name='***Setup Cancled***', value='Server setup cancled due to timeout or user selected: "QUIT"', inline=True)
+            em.set_author(name=f'{ctx.author.name}', icon_url=f'{ctx.author.avatar_url}')
+            em.set_footer(text=f"{ctx.author.guild}", icon_url=f"{ctx.author.guild.icon_url}")
+            em.timestamp = datetime.datetime.utcnow()
+            await sent.edit(embed=em)
+            return
+
+        if response != "NONE":
+            valid = await isValid(self,ctx,response)
+            if valid == None:
+                await ctx.send('This is an invalid text channel. Please enter a valid text channel.')
+            else:
+                audit_log = valid
+                break
+        else:
+            break
+
+
+    #displays final setup
+    await clearEmbed(self,ctx,em)
+    em.add_field(name='***Setup Complete***', value='These are your server settings.', inline=True)
+    em.add_field(name='***Channel***', value=f'{channel}', inline=True)
+    em.add_field(name='***Join Message***', value=f'{joinMessage}', inline=True)
+    em.add_field(name='***Leave Message***', value=f'{leaveMessage}', inline=True)
+    em.add_field(name='***Audit Log***', value=f'{audit_log}', inline=True)
+    em.set_author(name=f'{ctx.author.name}', icon_url=f'{ctx.author.avatar_url}')
+    em.set_footer(text=f"{ctx.author.guild}", icon_url=f"{ctx.author.guild.icon_url}")
+    em.timestamp = datetime.datetime.utcnow()
+    await sent.edit(embed=em)
+    await sent.add_reaction("\U00002705")
+    
+    #add/update Server
+    await addServer(self,ctx,channel,joinMessage, leaveMessage, audit_log)
+
+async def respond(self,ctx):
+    try:
+        msg = await self.client.wait_for("message", check= lambda message: message.author == ctx.author and message.channel == ctx.channel, timeout = 60.0)
+    except asyncio.TimeoutError:
+        await ctx.send('Setup timed out.')
+        return None
+    else:
+        message = msg.content
+        if message == "NONE":
+            return "NONE"
+        else:
+            return message
+
+async def clearEmbed(self,ctx, embed):
+    embed.clear_fields()
+
+async def isValid(self,ctx,response):
+    channel_ID= None
+    guild = ctx.guild
+    if response.startswith('<#'):
+        size = len(response)
+        channelID = response[2:size - 1]
+        channel = discord.utils.get(guild.text_channels, id=int(channelID))
+        if channel != None:
+            channel_ID = int(channelID)
+    elif response.isdecimal():
+        channel = discord.utils.get(guild.text_channels, id=int(response))
+        if channel != None:
+            channel_ID = int(response)
+    else:
+        channel = None
+    
+    return channel_ID
+
+async def addServer(self,ctx,channel,join, leave, audit_log):
+    guildID = ctx.guild.id
+    result = svrCollection.find_one({"_id":guildID})
+    if result == None:
+        newServer = {"_id":guildID, "channel": channel, "join": join, "leave": leave, "audit_log": audit_log}
+        svrCollection.insert_one(newServer)
+        await ctx.send('Server successfully registered.')
+    else:
+        svrCollection.update_one({"_id":ctx.guild.id}, {"$set":{"channel": channel, "join":join, "leave":leave, "audit_log": audit_log}})
+        await ctx.send("Server settings updated")
