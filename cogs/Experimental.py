@@ -27,7 +27,9 @@ class Experimental(commands.Cog):
         channelID = response[2:size - 1]
         channel =  self.client.get_channel(id=int(channelID))
     elif response.isdecimal():
-        channel =  self.client.get_channel(id=int(response))
+        guild = ctx.guild
+        channel = discord.utils.get(guild.text_channels, id=int(response))
+        #channel =  self.client.get_channel(id=int(response))
     else:
         channel = None
     
