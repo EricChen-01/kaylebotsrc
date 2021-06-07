@@ -21,8 +21,8 @@ class Experimental(commands.Cog):
     if setupMode == "auto":
         #creating a new category
         overwrites = {
-            ctx.guild.default_role: discord.PermissionOverwrite(send_messages=True),
-            ctx.guild.me: discord.PermissionOverwrite(read_messages=True)
+            ctx.guild.default_role: discord.PermissionOverwrite(send_messages=False),
+            ctx.guild.me: discord.PermissionOverwrite(send_messages=True)
         }
         category = await ctx.guild.create_category(name='SERVER INFO', overwrites=overwrites)
 
