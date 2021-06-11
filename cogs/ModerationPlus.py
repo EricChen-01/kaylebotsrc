@@ -149,17 +149,18 @@ class ModerationPlus(commands.Cog):
 
     guildID = before.guild.id
     guild = before.guild
-
     result = database(self, guildID)
-
     if result == None:
+      print('result is NONE')
       return
 
     channel = discord.utils.get(guild.text_channels, id=result["audit_log"])
 
     if channel == None:
+      print('channel is NONE')
       return
     else:
+      print('In embed')
       embed = discord.Embed(title=f"***Role was updated: @{old_role_name} to @{new_role_name}***",color=0x14749F)
       embed.set_thumbnail(url=f'{guild.icon_url}')
       embed.set_footer(text=f"{guild}", icon_url=f"{guild.icon_url}")
