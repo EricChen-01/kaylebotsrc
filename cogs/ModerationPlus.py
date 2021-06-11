@@ -142,6 +142,7 @@ class ModerationPlus(commands.Cog):
       await channel.send(embed=embed)
 
   #on message ends
+  @commands.Cog.listener()
   async def on_message_edit(self,before,after):
     msg = before.content
     author = before.author
