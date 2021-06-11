@@ -28,6 +28,9 @@ class ModerationPlus(commands.Cog):
     #welcome message if server is registered and all required fields are active.
     guildID = member.guild.id
     result = svrCollection.find_one({"_id":guildID})
+    if result == None:
+      return
+    
     channel = discord.utils.get(member.guild.text_channels, id=result["channel"])
 
     #custom variables for messages
@@ -36,7 +39,7 @@ class ModerationPlus(commands.Cog):
     mentionUser = member.mention
     count = member.guild.member_count
 
-    if result == None or result["channel"] == None or channel == None or result["join"] == None:
+    if result["channel"] == None or channel == None or result["join"] == None:
       return
     else:
       embed = discord.Embed(title="***Person Joined***",color=0x14749F, description=str(result["join"]).format(count=count,mention=mentionUser,user=userName, guildName=guildName))
@@ -57,6 +60,10 @@ class ModerationPlus(commands.Cog):
   async def on_member_remove(self, member):
     guildID = member.guild.id
     result = svrCollection.find_one({"_id":guildID})
+
+    if result == None:
+      return
+
     channel = discord.utils.get(member.guild.text_channels, id=result["channel"])
 
 
@@ -66,7 +73,7 @@ class ModerationPlus(commands.Cog):
     mentionUser = member.mention
     count = member.guild.member_count
 
-    if result == None or result["channel"] == None or channel == None or result["leave"] == None:
+    if result["channel"] == None or channel == None or result["leave"] == None:
       return
     else:
       embed = discord.Embed(title="***Person Left :(***",color=0x14749F, description=str(result["leave"]).format(count=count,mention=mentionUser,user=userName, guildName=guildName))
