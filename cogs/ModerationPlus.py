@@ -151,17 +151,36 @@ class ModerationPlus(commands.Cog):
     guild = before.guild
     result = database(self, guildID)
     if result == None:
-      print('result is NONE')
       return
 
     channel = discord.utils.get(guild.text_channels, id=result["audit_log"])
 
     if channel == None:
-      print('channel is NONE')
       return
     else:
-      print('In embed')
       embed = discord.Embed(title=f"***Role was updated: @{old_role_name} to @{new_role_name}***",color=0x14749F)
+      embed.set_thumbnail(url=f'{guild.icon_url}')
+      embed.set_footer(text=f"{guild}", icon_url=f"{guild.icon_url}")
+      await channel.send(embed=embed)
+
+  #on role delete
+  @commands.Cog.listener()
+  async def on_guild_role_delete(self,role):
+    role_name = role.name
+    guildID = role.guild.id
+    guild = role.guild
+
+    result = database(self, guildID)
+
+    if result == None:
+      return
+
+    channel = findChannel(self, guild, result["audit_log"])
+
+    if channel == None:
+      return
+    else:
+      embed = discord.Embed(title=f"***Role was deleted @{role_name}***",color=0x14749F)
       embed.set_thumbnail(url=f'{guild.icon_url}')
       embed.set_footer(text=f"{guild}", icon_url=f"{guild.icon_url}")
       await channel.send(embed=embed)
@@ -189,7 +208,7 @@ class ModerationPlus(commands.Cog):
       embed.set_footer(text=f"{author.guild}", icon_url=f"{author.guild.icon_url}")
       embed.timestamp = datetime.datetime.utcnow()
       await channel.send(embed=embed)
-
+  
   #commands  
   #server registration
   @commands.command()
@@ -610,4 +629,7 @@ async def addServer(self,ctx,channel,join, leave, audit_log):
 def database(self, guildID):
   result = svrCollection.find_one({"_id":guildID})
   return result
-  
+
+def findChannel(self, guild, id):
+  channel = discord.utils.get(guild.text_channels, id=id)
+  return channel
