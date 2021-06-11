@@ -143,7 +143,7 @@ class ModerationPlus(commands.Cog):
 
   #on role update
   @commands.Cog.listener()
-  async def on_guild_role_udpdate(self,before,after):
+  async def on_guild_role_update(self,before,after):
     old_role_name = before.name
     new_role_name = after.name
 
