@@ -153,7 +153,7 @@ class ModerationPlus(commands.Cog):
     if result == None:
       return
 
-    channel = discord.utils.get(guildID.text_channels, id=result["audit_log"])
+    channel = discord.utils.get(before.guild.text_channels, id=result["audit_log"])
 
     if channel == None:
       return
