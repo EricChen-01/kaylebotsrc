@@ -124,9 +124,12 @@ class ModerationPlus(commands.Cog):
     guild = role.guild
     result = svrCollection.find_one({"_id":guildID})
 
+    if result == None:
+      return
+    
     channel = discord.utils.get(guild.text_channels, id=result["audit_log"])
 
-    if result == None or result['audit_log'] == None or channel == None:
+    if result['audit_log'] == None or channel == None:
       return
     else:
       embed = discord.Embed(title=f"***Role was created: @{role_name}***",color=0x14749F)
