@@ -92,9 +92,12 @@ class ModerationPlus(commands.Cog):
     guildID = message.guild.id
     result = svrCollection.find_one({"_id":guildID})
 
+    if result == None:
+      return
+
     channel = discord.utils.get(message.guild.text_channels, id=result["audit_log"])
 
-    if result == None or result['audit_log'] == None or channel == None:
+    if result['audit_log'] == None or channel == None:
       return
     else:
       embed = discord.Embed(title=f"***Message Deleted in #{message.channel.name}***",color=0x14749F, description=f'{msg}')
