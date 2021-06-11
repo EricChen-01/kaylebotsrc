@@ -141,6 +141,29 @@ class ModerationPlus(commands.Cog):
       embed.timestamp = time_of_creation
       await channel.send(embed=embed)
 
+  #on message ends
+  async def on_message_edit(self,before,after):
+    msg = before.content
+    author = before.author
+    afterMsg = after.content
+    guildID = before.guild.id
+    result = svrCollection.find_one({"_id":guildID})
+
+    if result == None:
+      return
+
+    channel = discord.utils.get(guildID.text_channels, id=result["audit_log"])
+
+    if channel == None:
+      return
+    else:
+      embed = discord.Embed(title=f"***Message Edited in #{before.channel.name}***",color=0x14749F, description=f'***Before:*** {before.content} \n***After:*** {after.content}')
+      embed.set_thumbnail(url=f'{author.avatar_url}')
+      embed.set_author(name=f'{author.name}', icon_url=f'{author.avatar_url}')
+      embed.set_footer(text=f"{author.guild}", icon_url=f"{author.guild.icon_url}")
+      embed.timestamp = datetime.datetime.utcnow()
+      await channel.send(embed=embed)
+
   #commands  
   #server registration
   @commands.command()
