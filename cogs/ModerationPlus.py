@@ -141,6 +141,30 @@ class ModerationPlus(commands.Cog):
       embed.timestamp = time_of_creation
       await channel.send(embed=embed)
 
+  #on role update
+  @commands.Cog.listener()
+  async def on_guild_role_udpdate(self,before,after):
+    old_role_name = before.name
+    new_role_name = after.name
+
+    guildID = before.guild.id
+    guild = before.guild
+
+    result = database(self, guildID)
+
+    if result == None:
+      return
+
+    channel = discord.utils.get(guild.text_channels, id=result["audit_log"])
+
+    if channel == None:
+      return
+    else:
+      embed = discord.Embed(title=f"***Role was updated: @{old_role_name} to @{new_role_name}***",color=0x14749F)
+      embed.set_thumbnail(url=f'{guild.icon_url}')
+      embed.set_footer(text=f"{guild}", icon_url=f"{guild.icon_url}")
+      await channel.send(embed=embed)
+
   #on message ends
   @commands.Cog.listener()
   async def on_message_edit(self,before,after):
@@ -581,3 +605,8 @@ async def addServer(self,ctx,channel,join, leave, audit_log):
     else:
         svrCollection.update_one({"_id":ctx.guild.id}, {"$set":{"channel": channel, "join":join, "leave":leave, "audit_log": audit_log}})
         await ctx.send("Server settings updated")
+
+def database(self, guildID):
+  result = svrCollection.find_one({"_id":guildID})
+  return result
+  
