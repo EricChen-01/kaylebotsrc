@@ -20,9 +20,9 @@ class Experimental(commands.Cog):
   async def _setup(self,ctx):
     channel = discord.utils.get(ctx.guild.text_channels, id=None)
     if channel == None:
-        ctx.send('False')
+        await ctx.send('False')
     else:
-        ctx.send('True')
+        await ctx.send('True')
 def setup(client):
   client.add_cog(Experimental(client))
 
