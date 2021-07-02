@@ -117,52 +117,6 @@ class ModerationPlus(commands.Cog):
     else:
       svrCollection.delete_one({"_id":guildID})
 
-  #on role creation
-  @commands.Cog.listener()
-  async def on_guild_role_create(self,role):
-    role_name = role.name 
-    time_of_creation = role.created_at
-
-    guildID = role.guild.id
-    guild = role.guild
-    result = svrCollection.find_one({"_id":guildID})
-
-    if result == None:
-      return
-    
-    channel = discord.utils.get(guild.text_channels, id=result["audit_log"])
-
-    if result['audit_log'] == None or channel == None:
-      return
-    else:
-      embed = discord.Embed(title=f"***Role was created: @{role_name}***",color=0x14749F)
-      embed.set_thumbnail(url=f'{guild.icon_url}')
-      embed.set_footer(text=f"{guild}", icon_url=f"{guild.icon_url}")
-      embed.timestamp = time_of_creation
-      await channel.send(embed=embed)
-
-  #on role update
-  @commands.Cog.listener()
-  async def on_guild_role_update(self,before,after):
-    old_role_name = before.name
-    new_role_name = after.name
-
-    guildID = before.guild.id
-    guild = before.guild
-    result = database(self, guildID)
-    if result == None:
-      return
-
-    channel = discord.utils.get(guild.text_channels, id=result["audit_log"])
-
-    if channel == None:
-      return
-    else:
-      embed = discord.Embed(title=f"***Role was updated: @{old_role_name} to @{new_role_name}***",color=0x14749F)
-      embed.set_thumbnail(url=f'{guild.icon_url}')
-      embed.set_footer(text=f"{guild}", icon_url=f"{guild.icon_url}")
-      await channel.send(embed=embed)
-
   #on role delete
   @commands.Cog.listener()
   async def on_guild_role_delete(self,role):
@@ -185,29 +139,7 @@ class ModerationPlus(commands.Cog):
       embed.set_footer(text=f"{guild}", icon_url=f"{guild.icon_url}")
       await channel.send(embed=embed)
 
-  #on message ends
-  @commands.Cog.listener()
-  async def on_message_edit(self,before,after):
-    msg = before.content
-    author = before.author
-    afterMsg = after.content
-    guildID = before.guild.id
-    result = svrCollection.find_one({"_id":guildID})
 
-    if result == None:
-      return
-
-    channel = discord.utils.get(before.guild.text_channels, id=result["audit_log"])
-
-    if channel == None:
-      return
-    else:
-      embed = discord.Embed(title=f"***Message Edited in #{before.channel.name}***",color=0x14749F, description=f'***Before:*** {before.content} \n***After:*** {after.content}')
-      embed.set_thumbnail(url=f'{author.avatar_url}')
-      embed.set_author(name=f'{author.name}', icon_url=f'{author.avatar_url}')
-      embed.set_footer(text=f"{author.guild}", icon_url=f"{author.guild.icon_url}")
-      embed.timestamp = datetime.datetime.utcnow()
-      await channel.send(embed=embed)
   
   #commands  
   #server registration

@@ -4,6 +4,8 @@ import requests
 from PIL import Image
 from io import BytesIO
 from discord.ext import commands
+import aiohttp
+import asyncio
 
 
 class FunV2(commands.Cog):
@@ -229,6 +231,7 @@ class FunV2(commands.Cog):
     async def roast(self, ctx, user:discord.Member):
       response = requests.get("https://evilinsult.com/generate_insult.php?lang=en&type=json")
       await ctx.send(f'{user.display_name}, {response.json()["insult"]}')
+
     
 def setup(client):
     client.add_cog(FunV2(client))
