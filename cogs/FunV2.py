@@ -140,7 +140,7 @@ class FunV2(commands.Cog):
 
       missing.save("./images/profile_deer.jpg")
 
-      await ctx.send(file = discord.File("profile_deer.jpg"))
+      await ctx.send(file = discord.File("./images/profile_deer.jpg"))
 
     @commands.command(aliases=['clam'])
     async def clamify(self, ctx, user: discord.Member = None):
