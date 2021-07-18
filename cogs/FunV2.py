@@ -237,6 +237,11 @@ class FunV2(commands.Cog):
       await ctx.send(f'**{ctx.message.author.display_name}** said ')
       await ctx.send('https://cdn.discordapp.com/attachments/733031764271956088/866133062811254794/unknown.png')
 
+    @commands.command()
+    async def myman(self,ctx):
+      await ctx.send(f'**{ctx.message.author.display_name}** said ')
+      await ctx.send('https://cdn.discordapp.com/attachments/733031764271956088/866134278982074368/992.png')
+
     
 def setup(client):
     client.add_cog(FunV2(client))
