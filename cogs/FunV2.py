@@ -232,6 +232,11 @@ class FunV2(commands.Cog):
       response = requests.get("https://evilinsult.com/generate_insult.php?lang=en&type=json")
       await ctx.send(f'{user.display_name}, {response.json()["insult"]}')
 
+    @commands.command(aliases=['dabme'])
+    async def dabmeup(self, ctx):
+      await ctx.send(f'**{ctx.message.author.display_name}** said ')
+      await ctx.send('https://cdn.discordapp.com/attachments/733031764271956088/866133062811254794/unknown.png')
+
     
 def setup(client):
     client.add_cog(FunV2(client))
