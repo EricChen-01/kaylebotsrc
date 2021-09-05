@@ -7,7 +7,7 @@ class Math(commands.Cog):
         self.client = client
   #commands
   @commands.command()
-  async def b2d(self,ctx,number):  
+  async def b2d(self,ctx,number: int):  
     await ctx.send(f"attempting to convert {number} to binary.")
     if await isBinary(self,ctx,number):
       await ctx.send(f"your number is {number}")
