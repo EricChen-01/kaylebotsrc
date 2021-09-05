@@ -19,7 +19,7 @@ class Math(commands.Cog):
         power += 1
       await ctx.send(sum)
     else:
-      print("Not a binary number.")
+      await ctx.send("Not a binary number.")
 
 
   
