@@ -7,9 +7,9 @@ class Math(commands.Cog):
         self.client = client
   #commands
   @commands.command()
-  async def binaryToDecimal(self,ctx, number = None):
-      if number == None:
-        await ctx.send("Enter a binary number")
+  async def binaryToDecimal(self,ctx, number = 0):
+      if number == 0:
+        await ctx.send("0")
       else:
         await ctx.send("your number is {number}")
         while(number != 0):
