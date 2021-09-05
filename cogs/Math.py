@@ -11,9 +11,11 @@ class Math(commands.Cog):
       if number == None:
         await ctx.send("Enter a binary number")
       else:
-        for digit in number:
+        while(number != 0):
           digit = number%10
-          await ctx.send(digit)
+          number = number/10
+          await ctx.send("Digit is:{digit} and current number is {number}")
+
 
 
   
