@@ -33,7 +33,7 @@ class Math(commands.Cog):
         number = number // 2
       await ctx.send(binary [::-1])
     else:
-      await ctx.send("0")
+      await ctx.send("Number not supported.")
         
   
 def setup(client):
@@ -42,7 +42,6 @@ def setup(client):
 
 async def isBinary(self,ctx,number:int):
   set1 = set()
-  await ctx.send(f"inside isBinary")
   while(number > 0):
     digit = number % 10
     set1.add(digit)
