@@ -8,9 +8,7 @@ class Math(commands.Cog):
   #commands
   @commands.command()
   async def b2d(self,ctx,number: int):  
-    await ctx.send(f"attempting to convert {number} to binary.")
     if await isBinary(self,ctx,number):
-      await ctx.send(f"your number is {number}")
       sum = 0
       power = 0
       while(number > 0):
@@ -22,7 +20,21 @@ class Math(commands.Cog):
     else:
       await ctx.send("Not a binary number.")
 
-
+  @commands.command()
+  async def d2b(self,ctx,number:int):
+    binary = ""
+    if number >= 0:
+      while(number > 0):
+        remainder = number % 2
+        if remainder != 0:
+          binary += "1"
+        else:
+          binary += "0"
+        number = number // 2
+      await ctx.send(binary [::-1])
+    else:
+      await ctx.send("0")
+        
   
 def setup(client):
   client.add_cog(Math(client))
