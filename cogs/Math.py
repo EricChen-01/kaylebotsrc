@@ -9,11 +9,11 @@ class Math(commands.Cog):
   @commands.command()
   async def b2d(self,ctx,number):  
     await ctx.send(f"attempting to convert {number} to binary.")
-    if isBinary(self,ctx,number):
+    if await isBinary(self,ctx,number):
       await ctx.send(f"your number is {number}")
       sum = 0
       power = 0
-      while(number != 0):
+      while(number > 0):
         digit = number%10
         number = number//10
         sum = sum + digit * 2 ** power
