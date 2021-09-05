@@ -7,7 +7,7 @@ class Math(commands.Cog):
         self.client = client
   #commands
   @commands.command()
-  async def b2d(self,ctx,number):  
+  async def b2d(self,ctx,number:int):  
     if isBinary(number):
       await ctx.send(f"your number is {number}")
       sum = 0
@@ -27,7 +27,7 @@ def setup(client):
   client.add_cog(Math(client))
 
 
-async def isBinary(self,ctx,number):
+async def isBinary(self,ctx,number: int):
   set1 = set()
   while(number > 0):
     digit = number % 10
