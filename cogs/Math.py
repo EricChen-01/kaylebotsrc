@@ -7,18 +7,37 @@ class Math(commands.Cog):
         self.client = client
   #commands
   @commands.command()
-  async def binaryToDecimal(self,ctx, number = 0):
-      if number == 0:
-        await ctx.send("0")
-      else:
-        await ctx.send("your number is {number}")
-        while(number != 0):
-          digit = number%10
-          number = number/10
-          await ctx.send("Digit is:{digit} and current number is {number}")
-
+  async def b2d(number):  
+    if isBinary(number):
+      print(f"your number is {number}")
+      sum = 0
+      power = 0
+      while(number != 0):
+        digit = number%10
+        number = number//10
+        sum = sum + digit * 2 ** power
+        power += 1
+      print(sum)
+    else:
+      print("Not a binary number.")
 
 
   
 def setup(client):
   client.add_cog(Math(client))
+
+
+async def isBinary(self,ctx,number):
+  set1 = set()
+  while(number > 0):
+    digit = number % 10
+    set1.add(digit)
+    number = int(number / 10)
+
+  set1.discard(0)
+  set1.discard(1)
+    
+  if (len(set1) == 0):
+      return True
+
+  return False
