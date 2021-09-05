@@ -28,7 +28,7 @@ def setup(client):
   client.add_cog(Math(client))
 
 
-async def isBinary(self,ctx,number):
+async def isBinary(self,ctx,number:int):
   set1 = set()
   await ctx.send(f"inside isBinary")
   while(number > 0):
