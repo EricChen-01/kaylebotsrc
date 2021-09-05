@@ -7,7 +7,7 @@ class Math(commands.Cog):
         self.client = client
   #commands
   @commands.command()
-  async def b2d(number):  
+  async def b2d(self,ctx,number):  
     if isBinary(number):
       print(f"your number is {number}")
       sum = 0
