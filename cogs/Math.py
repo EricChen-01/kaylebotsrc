@@ -8,7 +8,7 @@ class Math(commands.Cog):
   #commands
   @commands.command()
   async def b2d(self,ctx,number:int):  
-    await ctx.send(f"attempting to convert {number} to binary.")
+    await ctx.send(f"attempting to convert {number + 1} to binary.")
     if isBinary(number):
       await ctx.send(f"your number is {number}")
       sum = 0
