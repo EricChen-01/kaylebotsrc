@@ -5,6 +5,7 @@ import asyncio
 import random
 import datetime
 
+
 intents = discord.Intents.all()
 
 client = commands.Bot(case_insensitive=True, command_prefix='.k ', intents=intents)
@@ -57,6 +58,7 @@ async def load(ctx, extension):
 async def unload(ctx, extension):
     client.unload_extension(f'cogs.{extension}')
 
+
 for filename in os.listdir('./cogs'):
     if filename.endswith('.py'):
         client.load_extension(f'cogs.{filename[:-3]}')
@@ -78,4 +80,5 @@ async def help(ctx):
 
 
 client.loop.create_task(change_stat())
-client.run(os.getenv("TOKEN"))
+#client.run(os.getenv("TOKEN"))
+client.run('ODIwNDI3MTc2NTUyNjkzODAw.YE1AWQ.fBbnc0nN-cEiqPTRz3rSjXB92gI')
