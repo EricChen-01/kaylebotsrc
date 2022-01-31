@@ -80,5 +80,4 @@ async def help(ctx):
 
 
 client.loop.create_task(change_stat())
-#client.run(os.getenv("TOKEN"))
-client.run('ODIwNDI3MTc2NTUyNjkzODAw.YE1AWQ.fBbnc0nN-cEiqPTRz3rSjXB92gI')
+client.run(os.getenv("TOKEN"))

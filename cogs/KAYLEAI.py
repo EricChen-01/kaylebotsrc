@@ -24,9 +24,9 @@ class KAYLEAI(commands.Cog):
         querystring = {"msg":encoded,"bot_name":"TEST","bot_gender":"male","bot_master":"TEST","bot_age":"19","id": message.author.id,"bot_location": "United States"}
 
         headers = {
-        'authorization': 'URIDaYVJoZRJ',#os.getenv('APIKEY'),
+        'authorization': os.getenv('APIKEY'),
         'x-rapidapi-host': "random-stuff-api.p.rapidapi.com",
-        'x-rapidapi-key': '6df8e54493mshb53e746b3c30065p1de934jsn891d42f50ba7',#os.getenv('rapidapi-key')
+        'x-rapidapi-key': os.getenv('rapidapi-key')
         }
 
         response = requests.request("GET", url, headers=headers, params=querystring)
